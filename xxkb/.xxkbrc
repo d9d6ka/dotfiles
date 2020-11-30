@@ -1,0 +1,19 @@
+XXkb.image.path: /home/zyamalov/.local/share/xxkb/flags
+XXkb.mainwindow.enable: true
+XXkb.mainwindow.type: tray
+XXkb.mainwindow.in_tray: true
+XXkb.mainwindow.appicon: no
+XXkb.mainwindow.geometry: 15x15+0+0
+XXkb.mainwindow.image.1: us.xpm
+XXkb.mainwindow.image.2: ru.xpm
+XXkb.mainwindow.image.3: 
+XXkb.mainwindow.image.4: 
+XXkb.mainwindow.label.enable: no
+#XXkb.mainwindow.label.background: 
+#XXkb.mainwindow.label.foreground: white
+#XXkb.mainwindow.label.font: -*-misc-*-r-*-10-*
+#XXkb.mainwindow.label.text.1: En
+#XXkb.mainwindow.label.text.2: Ru
+XXkb.controls.add_when_start: yes
+XXkb.controls.two_state: no
+XXkb.button.enable: no

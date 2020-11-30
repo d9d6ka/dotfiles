@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+res=$(rofi -dmenu -lines 6 -p "Choose:" <<EOF
+lock
+suspend
+logout
+hibernate
+reboot
+shutdown
+EOF
+)
+
+echo "$res"
+
+[ -z "$res" ] && exit
+
+if [ $res = "lock" ]; then
+	i3lock-fancy && sleep 1
+fi
+if [ $res = "suspend" ]; then
+	i3lock-fancy && sleep 1 && sudo zzz #systemctl suspend
+fi
+if [ $res = "logout" ]; then
+    case "$DESKTOP_SESSION" in
+        "bspwm") bspc quit ;;
+        "dwm") xdotool key Super+Shift+q ;;
+        "openbox") openbox --exit ;;
+        "i3") i3-msg exit ;;
+    esac
+fi
+if [ $res = "hibernate" ]; then
+	i3lock-fancy && sleep 1 && sudo ZZZ #systemctl hibernate
+fi
+if [ $res = "reboot" ]; then
+	#systemctl reboot
+    sudo reboot
+fi
+if [ $res = "shutdown" ]; then
+	#systemctl poweroff -i
+    sudo shutdown -P now
+fi

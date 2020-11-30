@@ -1,0 +1,46 @@
+#!/bin/bash
+
+function displaytime {
+    local H=$(($1/60/60%24))
+    local M=$(($1/60%60))
+    printf '(%02d:%02d)' $H $M
+}
+
+[ $(cat /sys/class/power_supply/AC0/online) -ne 0 ] && acicon="🔌" || acicon=""
+
+statusfin="${acicon}"
+
+for bat in /sys/class/power_supply/BAT? ; do
+    batterynumber="${bat: -1}"
+    capacity=$(cat "$bat"/capacity)
+    charge=$(( $(cat "$bat"/charge_now) * 3600 ))
+    current=$(cat "$bat"/current_now)
+    [ $(cat /sys/class/power_supply/AC0/online) -eq 0 ] && remaining=" $(displaytime $(( $charge/$current )) )" || remaining=""
+    batterystatus=$(cat "$bat"/status)
+    case "${batterystatus}" in
+        "Discharging") icon="🔋 " ;;
+        "Charging") icon="⚡ " ;;
+        "Unknown") icon="? " ;;
+        "Full"|"Charged") icon="" ;;
+        *) icon="" ;;
+    esac
+    statusfin="${statusfin}${icon}${capacity}%${remaining}"
+
+    if [ "${capacity}" -le 10 ]; then
+        if [ ! -f "$wdir/.dunstbattery${batterynumber}critical" ]; then
+            notify-send --urgency critical 'Батарея ${batterynumber} разряжена!'
+            touch "$wdir/.dunstbattery${batterynumber}critical"
+        fi
+        exit 33
+    fi
+    
+    if [ "${capacity%?}" -gt 10 -a -f "$wdir/.dunstbattery${batterynumber}critical" ]; then
+        rm -f "$wdir/.dunstbattery${batterynumber}critical"
+    fi
+done
+
+# full line
+echo "${statusfin}"
+# short line
+echo "${statusfin}"
+

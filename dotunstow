@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+tmp=$(pwd)
+if [ -n "$2" ]; then
+    [ $2 -eq 1 ] && dive=1 || dive=0
+else
+    dive=1
+fi
+
+function proc_folder {
+    cd $1
+    for i in $(ls -A); do
+        case "$(file --mime-type $i | cut -d/ -f2)" in
+            "directory")
+                #echo "$i : dir"
+                [ $dive -eq 1 ] && proc_folder $i
+                ;;
+            "symlink")
+                echo -n "$i : sym"
+                cp --remove-destination "$(readlink $i)" $i
+                [ -f $i ] && echo " : OK" || echo " : FAIL"
+                ;;
+        esac
+    done
+    cd ..
+}
+
+proc_folder $1
+cd $tmp
+

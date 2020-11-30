@@ -1,0 +1,108 @@
+! Some configs by Derek Taylor (DistroTube) were used
+!       see:    http://www.youtube.com/c/DistroTube
+!               http://www.gitlab.com/dwt1/ 
+
+!! Xft settings
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: true
+Xft.hintstyle: hintfull
+Xft.lcdfilter: lcdfilter
+
+!! URxvt settings
+URxvt*imLocale: ru_RU.UTF-8
+URxvt*termName: rxvt-unicode-256color
+Urxvt*buffered: false
+URxvt.intensityStyles: false
+URxvt.font: xft:FiraMono Nerd Font:size=10, \
+            xft:Monospace:style=Medium:size=10   
+URxvt.saveLines: 2000
+URxvt.scrollBar: false
+URxvt.cursorColor: white
+
+!! Extensions
+URxvt.perl-ext-common: default,resize-font,keyboard-select,clipboard
+URxvt.colorUL: #4682B4
+!! keyboard-select:
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+!! resize-font
+URxvt.resize-font.smaller: C-j
+URxvt.resize-font.bigger:  C-k
+URxvt.resize-font.step:    1
+!!clipboard
+URxvt.keysym.M-c: perl:clipboard:copy
+URxvt.keysym.M-v: perl:clipboard:paste
+URxvt*depth: 32
+
+
+!! st termname
+st.alpha: 0.95
+st.termname: st-256color
+
+!! dwm settings
+dwm.gappx: 2
+dwm.mfact: 0.5
+dwm.normbgcolor: #3B4252
+dwm.selbgcolor: #616E88
+dwm.normbordercolor: #3B4252
+dwm.selbordercolor: #616E88
+dwm.normfgcolor: #D8DEE9
+dwm.selfgcolor: #D8DEE9
+
+!! dmenu settings
+dmenu.foreground: #D8DEE9
+dmenu.background: #3B4252
+dmenu.selforeground: #D8DEE9
+dmenu.selbackground: #616E88
+
+!! NORD Colorscheme
+! Copyright (c) 2016-present Arctic Ice Studio <development@arcticicestudio.com>
+! Copyright (c) 2016-present Sven Greb <code@svengreb.de>
+
+! Project:    Nord XResources
+! Version:    0.1.0
+! Repository: https://github.com/arcticicestudio/nord-xresources
+! License:    MIT
+
+#define nord0 #2E3440
+#define nord1 #3B4252
+#define nord2 #434C5E
+#define nord3 #616E88
+#define nord4 #D8DEE9
+#define nord5 #E5E9F0
+#define nord6 #ECEFF4
+#define nord7 #8FBCBB
+#define nord8 #88C0D0
+#define nord9 #81A1C1
+#define nord10 #5E81AC
+#define nord11 #BF616A
+#define nord12 #D08770
+#define nord13 #EBCB8B
+#define nord14 #A3BE8C
+#define nord15 #B48EAD
+
+*.foreground:   #D8DEE9
+*.background:   #2E3440
+*.cursorColor:  #D8DEE9
+*fading: 35
+*fadeColor: #616E88
+
+*.color0: #3B4252
+*.color1: #BF616A
+*.color2: #A3BE8C
+*.color3: #EBCB8B
+*.color4: #81A1C1
+*.color5: #B48EAD
+*.color6: #88C0D0
+*.color7: #E5E9F0
+*.color8: #616E88
+*.color9: #BF616A
+*.color10: #A3BE8C
+*.color11: #EBCB8B
+*.color12: #81A1C1
+*.color13: #B48EAD
+*.color14: #8FBCBB
+*.color15: #ECEFF4
+

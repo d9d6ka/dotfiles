@@ -1,0 +1,14 @@
+#!/bin/bash
+
+wd=$(pwd)
+curdir=$(dirname "$0")
+
+cd "$curdir"
+
+wget -O 1.txt https://easylist-downloads.adblockplus.org/easylist.txt
+wget -O 2.txt https://raw.githubusercontent.com/annon79/Blockzilla/master/Blockzilla.txt
+wget -O 3.txt https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt
+
+cat 1.txt > easylist.txt && rm 1.txt
+cat 2.txt >> easylist.txt && rm 2.txt
+cat 3.txt >> easylist.txt && rm 3.txt

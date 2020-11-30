@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+repo=$(pwd)
+root=~
+
+function proc_folder {
+    cd $1
+    for i in $(ls -A); do
+        if [ -d "$i" ]; then
+            echo "${2##/}${2:+/}$i : dir"
+            mkdir -p "$root/${2##/}${2:+/}$i"
+            proc_folder $i "${2##/}${2:+/}$i"
+        fi
+        if [ -f "$i" ]; then
+            echo "${2##/}${2:+/}$i : file"
+            rm -f "$root/${2##/}${2:+/}$i"
+            ln -s "$repo/$pkg/${2##/}${2:+/}$i" "$root/${2##/}${2:+/}$i"
+        fi
+    done
+    cd ..
+}
+
+while [[ $# -gt 0 ]]; do
+    pkg=${1%%/}
+    proc_folder $pkg ""
+    shift
+done
+cd $repo
+

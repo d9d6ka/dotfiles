@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+getweather() {
+    ping -q -c 1 ya.ru > /dev/null || exit 1
+    curl -s "https://wttr.in" > "$HOME/.local/share/weatherreport" || exit 1;
+}
+
+showweather() {
+    printf " %s \n" "$(sed -e '13q;d' "$HOME/.local/share/weatherreport" | grep -o 'm\(-\)*[0-9]\+' | sed -e '1b;$!d' | sort -t m -n -k 2n | tr '\n|m' ' ' | awk '{printf " %s/%s\n",$1,$2}')"
+}
+
+if [ "$(stat -c %y "$HOME/.local/share/weatherreport" 2> /dev/null | awk '{print $1}')" != "$(date '+%Y-%m-%d')" ]; then
+    getweather && showweather
+else
+    showweather
+fi
+

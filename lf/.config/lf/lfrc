@@ -1,0 +1,38 @@
+set shell sh
+set shellopts '-eu'
+set ifs "\n"
+set preview true
+set previewer pistol
+set hidden true
+set drawbox true
+set ignorecase true
+set icons true
+
+# Commands
+
+cmd open ${{
+    case $(file --mime-type "$f" -bL) in
+        text/*|application/json) $EDITOR "$f";;
+        video/*) mpv "$f";;
+        image/*/application/pdf) xdg-open "$f";;
+        image/*) sxiv "$f";;
+        *) xdg-open "$f" ;;
+    esac
+}}
+
+cmd mkdir $mkdir $1
+
+cmd delete ${{
+    set -f
+    printf "$fx\n"
+    printf "Delete files? [y/n]: "
+    read ans
+    [ "$ans" = "y" ] && rm -rf $fx
+}}
+
+# Keymaps
+
+map <f-2> push :rename<enter>
+map r     push :rename<enter>
+map <f-7> push :mkdir<space>
+map <delete> delete

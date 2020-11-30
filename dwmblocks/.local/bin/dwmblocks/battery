@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+function displaytime {
+    local H=$(($1/60/60%24))
+    local M=$(($1/60%60))
+    printf '(%02d:%02d)' $H $M
+}
+
+[ $(cat /sys/class/power_supply/AC0/online) -ne 0 ] && printf " ﮣ"
+
+for bat in /sys/class/power_supply/BAT? ; do
+    capacity=$(cat "$bat"/capacity)
+    charge=$(( $(cat "$bat"/charge_now) * 3600 ))
+    current=$(cat "$bat"/current_now)
+    bstatus=$(cat "$bat"/status)
+    case "$bstatus" in
+        "Discharging")
+            [ "$capacity" != "" ] && [ $capacity -gt 95 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 95 -a $capacity -gt 90 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 90 -a $capacity -gt 80 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 80 -a $capacity -gt 70 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 70 -a $capacity -gt 60 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 60 -a $capacity -gt 50 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 50 -a $capacity -gt 40 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 40 -a $capacity -gt 30 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 30 -a $capacity -gt 20 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 20 -a $capacity -gt 10 ] && icon=""
+            [ "$capacity" != "" ] && [ $capacity -le 10 ] && icon=""
+            ;;
+        "Charging") icon="" ;;
+        "Unknown") icon="" ;;
+        "Full"|"Charged") icon="" ;;
+        *) icon="" ;;
+    esac
+    [ "$icon" != "" ] && printf " %s" "$icon"
+    [ "$capacity" != "" ] && printf " %s%%" "$capacity"
+    [ $(cat /sys/class/power_supply/AC0/online) -eq 0 ] && printf " %s \n" $(displaytime $(($charge/$current)) ) || printf " \n"
+done
+

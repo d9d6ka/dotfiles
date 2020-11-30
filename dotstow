@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+[ ! "$1" ] && echo "No packages given!" && exit
+
+while [ "$1" ]; do
+	if [ ! -d "$1" ]; then
+		echo "No package $1!"
+	else
+		stow -t ~ --no-folding $1
+	fi
+	shift
+done

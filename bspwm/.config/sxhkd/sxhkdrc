@@ -1,0 +1,94 @@
+#---BSPWM Bindings
+# powermenu
+XF86PowerOff
+    ~/.local/bin/powermenu/powermenu
+
+# Restart bspwm
+super + shift + w
+    bspc wm -r
+
+# Restart hotkey daemon
+super + shift + x
+    pkill sxhkd && sxhkd &
+
+# Kill Window
+super + shift + c
+    xdo close
+
+# Focus on window in direction
+super + {h,j,k,l}
+    bspc node -f {west,south,north,east}
+
+# Send window to desktop
+super + shift + {0-9}
+    bspc node -d {0-9}
+
+# Send window to desktop and swap to desktop
+super + control + {0-9}
+    bspc node -d {0-9} && bspunhide && bspc desktop -f {0-9}
+
+# Rotate the tree from the current nodes parent
+super + control + {Right, Left}
+    bspc node @parent -C {forward, backward}
+
+# Flip the tree from the current nodes parent
+super + control + {h,j,k,l}
+    bspc node @parent -F {vertical,horizontal,horizontal,vertical}
+
+# Toggle fullscreen on and off
+super + f
+    bspc node focused.!fullscreen -t fullscreen || bspc node focused.fullscreen -t tiled
+
+# Toggle floating on and off
+super + o
+    bspc node focused.!floating -t floating || bspc node focused.floating -t tiled
+
+# Swap window with direction
+super + shift + {h,j,k,l}
+    bspc node -s {west,south,north,east}
+
+# Focus on desktop
+super + {0-9}
+    bspc desktop -f {0-9}
+
+# Cycle through desktops
+super + alt + {Left, Right}
+    bspc desktop -f {prev, next}
+
+# Expand a window by moving one of its side outward
+ctrl + alt + {h,j,k,l}
+    bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+    #xdo resize {-w -20, -h +20, -h -20, -w +20}
+
+# Contract a window by moving one of its side inward
+ctrl + alt + shift + {h,j,k,l}
+    bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+    #xdo resize {-w +20, -h -20, -h +20, -w -20}
+
+# Move a floating window
+ctrl + alt + {Left,Right,Up,Down}
+    xdo move {-x -20, -x +20, -y -20, -y +20}
+
+# Pulse Controls
+{XF86AudioLowerVolume, XF86AudioRaiseVolume}
+    pactl set-sink-volume @DEFAULT_SINK@ {-5%, +5%}
+
+XF86AudioMute
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+#---Application Launchers---#
+super + Return
+    $TERMINAL
+
+super + shift + Return
+    rofi -show run
+
+super + u
+    dmenuunicode
+
+super + shift + u
+    dmenuunicode ok
+
+super + c
+    clipmenu
+

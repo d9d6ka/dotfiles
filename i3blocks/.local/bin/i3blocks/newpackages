@@ -1,0 +1,18 @@
+#!/bin/bash
+
+packagesnew=$(xbps-install -Mun | grep 'update' | wc -l)
+label="📦"
+
+# full_line
+printf "%s %s\n" "$label" "$packagesnew"
+# short_line
+printf "%s %s\n" "$label" "$packagesnew"
+# foreground color
+if [ "$packagesnew" -eq 0 ]; then
+    echo "#00ff00"
+elif [ "$packagesnew" -le 5 ]; then
+    echo "#ffff00"
+else
+    echo "#ff0000"
+fi
+

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Midnight Commander
+Type=Application
+Terminal=true
+Comment=A visual file manager
+Exec=mc
+TryExec=mc
+Icon=MidnightCommander
+Categories=System;FileTools;FileManager;

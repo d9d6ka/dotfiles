@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [ $(uname -a | grep -i -c 'debian') -gt 0 ]; then
+	apt update 2>& /dev/null
+	packagesnew=$(apt-get -s -o Debug::NoLocking=true upgrade | grep '^Inst' | wc -l)
+fi
+
+if [ $(uname -a | grep -i -c 'void') -gt 0 ]; then
+	packagesnew=$(xbps-install -Mun | grep 'update' | wc -l)
+fi
+
+label=""
+
+printf " %s %s \n" "$label" "$packagesnew"
+

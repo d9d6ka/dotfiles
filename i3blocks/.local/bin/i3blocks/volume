@@ -1,0 +1,29 @@
+#!/bin/bash
+
+pulseaudio -D &> /dev/null
+
+case $BLOCK_BUTTON in
+	1) setsid "$TERMINAL" -e pulsemixer & ;;
+	3) pactl set-sink-mute @DEFAULT_SINK@ toggle ;;
+	4) pactl set-sink-volume @DEFAULT_SINK@ +5% ;;
+	5) pactl set-sink-volume @DEFAULT_SINK@ -5% ;;
+esac
+
+volstat=$(pacmd list-sinks | sed -n -e '/index/p;/base volume/d;/volume:/p;/muted:/p;/device\\.string/p')
+
+echo "$volstat" | grep -n "muted: yes" > /dev/null && printf "🔇\n🔇\n#ffff00\n" && exit
+
+vol=$(echo "$volstat" | grep -o "[0-9]\+%" | sed "s/[^0-9]*//g;1q")
+
+if [ "$vol" -gt "70" ]; then
+	icon="🔊"
+elif [ "$vol" -lt "30" ]; then
+	icon="🔈"
+else
+	icon="🔉"
+fi
+
+# full line
+printf "%s %s%%\n" "$icon" "$vol"
+# short line
+printf "%s %s%%\n" "$icon" "$vol"
