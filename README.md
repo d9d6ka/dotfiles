@@ -100,19 +100,25 @@ echo 'export $(dbus-launch)' >> ~/.profile
 xbps-install lightdm lightdm-gtk-greeter-settings
 ```
 
+#### Appearance
+```bash
+xbps-install lxappearance qt5ct kvantum
+xbps-install plasma-workspace-wallpapers paper-gtk-theme paper-icon-theme arc-theme breeze-cursors xcursor-vanilla-dmz
+```
+
 #### Openbox environment
 ```bash
-xbps-install openbox obconf obmenu obmenu-generator tint2 xxkb lxappearance upower mate-powermanagement nitrogen urxvt mate-polkit volctl pnmixer pasystray pavucontrol pcmanfm i3lock-fancy dunst
+xbps-install openbox obconf obmenu obmenu-generator tint2 xxkb upower mate-powermanagement nitrogen urxvt mate-polkit volctl pnmixer pasystray pavucontrol pcmanfm i3lock-fancy dunst
 ```
 
 #### i3 environment
 ```bash
-xbps-install i3 i3status i3blocks acpi xxkb lxappearance nitrogen urxvt mate-powermanagement mate-polkit volctl pnmixer pasystray pavucontrol i3lock-fancy dunst
+xbps-install i3 i3status i3blocks acpi xxkb nitrogen urxvt mate-powermanagement mate-polkit volctl pnmixer pasystray pavucontrol i3lock-fancy dunst
 ```
 
 #### bspwm environment
 ```bash
-xbps-install bspwm sxhkd xdo lxappearance lxtask nitrogen urxvt mate-powermanagement mate-polkit volctl pnmixer pasystray pavucontrol i3lock-fancy dunst
+xbps-install bspwm sxhkd xdo lxtask nitrogen urxvt mate-powermanagement mate-polkit volctl pnmixer pasystray pavucontrol i3lock-fancy dunst
 ```
 
 #### xmonad
@@ -135,7 +141,7 @@ EOT
 
 #### dwm environment
 ```bash
-xbps-install xdo xdotool lxappearance nitrogen i3lock-fancy xxkb dunst
+xbps-install xdo xdotool nitrogen i3lock-fancy xxkb dunst
 ```
 #### XFCE4 environment
 ```bash
@@ -148,7 +154,6 @@ xbps-install bash-completion zsh zsh-autosuggestions zsh-completions zsh-syntax-
 xbps-install wget curl unzip p7zip
 xbps-install xdg-utils dunst neovim gmrun gksu ranger w3m
 xbps-install evince zathura zathura-{cb,pdf-mupdf,ps,djvu} mupdf-tools
-xbps-install plasma-workspace-wallpapers paper-gtk-theme paper-icon-theme arc-theme breeze-cursors xcursor-vanilla-dmz
 ```
 
 #### Go programs
