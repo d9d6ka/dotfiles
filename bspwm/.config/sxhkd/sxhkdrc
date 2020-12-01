@@ -1,7 +1,4 @@
 #---BSPWM Bindings
-# powermenu
-XF86PowerOff
-    ~/.local/bin/powermenu/powermenu
 
 # Restart bspwm
 super + shift + w
@@ -75,6 +72,10 @@ ctrl + alt + {Left,Right,Up,Down}
 
 XF86AudioMute
     pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# powermenu
+XF86PowerOff
+    powermenu
 
 #---Application Launchers---#
 super + Return
