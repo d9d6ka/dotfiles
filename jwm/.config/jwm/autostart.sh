@@ -3,20 +3,54 @@
 function run {
     tmp=$(basename -- $1)
     pgrep -x $tmp > /dev/null
-    if [ $? -eq 1 ]
-    then
+    if [ $? -eq 1 ]; then
         $@ &
     fi
 }
 
+function hlt {
+    tmp=$(basename -- $1)
+    pgrep -x $tmp > /dev/null
+    if [ $? -eq 1 ]; then
+        for i in $(pidof $tmp); do
+            kill $1
+        done
+        sleep 1
+    fi
+}
+
+# Low-level X apps preferences
 run xrdb -merge ~/.Xresources
-run compton -b
-run nitrogen --random --set-zoom-fill ~/.local/share/wallpapers
+
+# Mate Polkit Agent
 run /usr/libexec/polkit-mate-authentication-agent-1
+
+# Notifications
+run dunst &
+
+# Compositor
+run compton -b
+
+# NetworkManager applet
 run nm-applet
-run pcmanfm -d
-run volctl
-run mate-power-manager
+
+# Clipboard manager
 run clipmenud
+
+# Keyboard layouts
 run setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle
+hlt xxkb
 run xxkb
+
+# Wallpaper
+run nitrogen --random --set-zoom-fill ~/.local/share/wallpapers
+
+# Daemonise PCManFM
+run pcmanfm -d
+
+# Volume icon
+run volctl
+
+# Power manager
+run mate-power-manager
+

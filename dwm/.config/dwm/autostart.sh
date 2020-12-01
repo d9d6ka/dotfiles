@@ -9,11 +9,25 @@ function run {
     fi
 }
 
+function hlt {
+    tmp=$(basename -- $1)
+    pgrep -x $tmp > /dev/null
+    if [ $? -eq 1 ]; then
+        for i in $(pidof $tmp); do
+            kill $1
+        done
+        sleep 1
+    fi
+}
+
 # Low-level X apps preferences
 xrdb -merge ~/.Xresources
 
 # Mate Polkit Agent
 run /usr/libexec/polkit-mate-authentication-agent-1
+
+# Notifications
+run dunst &
 
 # Compositor
 run compton -b
@@ -26,7 +40,7 @@ run clipmenud
 
 # Keyboard layouts
 run setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle
-pkill xxkb && sleep 1
+hlt xxkb
 run xxkb
 
 # Wallpaper

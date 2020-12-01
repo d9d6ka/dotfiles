@@ -4,6 +4,9 @@ xrdb -merge ~/.Xresources &
 # Mate PolKit Agent
 /usr/libexec/polkit-mate-authentication-agent-1 &
 
+# Notifications
+dunst &
+
 # Compositor
 compton -b &
 
@@ -25,6 +28,7 @@ volctl &
 mate-power-manager &
 
 # Keyboard layouts
+pkill xxkb
 (setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle && xxkb) &
 
 # DBus
