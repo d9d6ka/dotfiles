@@ -103,6 +103,9 @@ let g:lightline = {
 autocmd ColorScheme * highlight Visual cterm=reverse
 colorscheme nord
 
+au WinLeave * set nocursorline nocursorcolumn
+au BufEnter,WinEnter * set cursorline cursorcolumn
+
 " Tab and Indent
 set tabstop=4
 set softtabstop=4
