@@ -2,38 +2,7 @@
 bspc rule -r "*"
 
 ###---Autostart---###
-xrdb -merge ~/.Xresources
-setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle & 
-pkill xxkb
-xxkb &
-
-pkill compton
-compton -b &
-
-nitrogen --random --set-zoom-fill ~/.local/share/wallpapers &
-
-~/.config/polybar/launch.sh
-
-pkill sxhkd
-sxhkd &
-
-pkill polkit-mate-authentication-agent-1
-/usr/libexec/polkit-mate-authentication-agent-1 &
-
-pkill clipmenud
-clipmenud &
-
-pkill nm-applet
-nm-applet &
-
-pkill pcmanfm
-pcmanfm -d &
-
-pkill mate-power-manager
-mate-power-manager &
-
-pkill volctl
-volctl &
+~/.config/bspwm/autostart.sh
 
 ###---MONITORS---###
 bspc monitor focused -d 1 2 3 4 5 6 7 8 9 0
