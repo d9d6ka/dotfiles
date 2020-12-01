@@ -19,6 +19,9 @@ function hlt {
     fi
 }
 
+# Hotkey daemon
+run sxhkd
+
 # Low-level X apps preferences
 run xrdb -merge ~/.Xresources
 
