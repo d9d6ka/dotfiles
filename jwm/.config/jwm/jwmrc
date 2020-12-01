@@ -5,7 +5,7 @@
         <Program icon="terminal.svg" label="Terminal">$TERMINAL</Program>
         <Separator />
         <Menu label="Power-off" icon="system-shutdown.svg">
-            <Restart label="Restart" icon="restart.svg" />
+            <Program label="Restart" icon="restart.svg">jwm -restart &amp;&amp; $HOME/.config/jwm/autostart.sh</Program>
             <Program icon="system-lock-screen.svg" label="Lock">i3lock-fancy</Program>
             <Exit label="Logout" confirm="true" icon="system-log-out.svg" />
             <Program icon="system-suspend.svg" label="Sleep">sleep 1 &amp;&amp; sudo zzz</Program>

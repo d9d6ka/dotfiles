@@ -12,9 +12,9 @@ function run {
 function hlt {
     tmp=$(basename -- $1)
     pgrep -x $tmp > /dev/null
-    if [ $? -eq 1 ]; then
+    if [ $? -eq 0 ]; then
         for i in $(pidof $tmp); do
-            kill $1
+            kill $i
         done
         sleep 1
     fi
