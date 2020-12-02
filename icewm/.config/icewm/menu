@@ -5,5 +5,5 @@
 #
 prog "Terminal" terminal alacritty
 prog Firefox firefox firefox
-prog "Refresh menu" terminal xdgmenumaker -i -f icewm > ~/.config/icewm/appmenu
+prog "Refresh menu" terminal /bin/sh -c 'xdgmenumaker -n -i -f icewm > ~/.config/icewm/appmenu'
 include appmenu

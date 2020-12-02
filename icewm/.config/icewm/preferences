@@ -254,16 +254,16 @@
 # TaskBarShowAPMStatus=0 # 0/1
 
 #  Enable TaskBarShowAPMStatus if a battery is present
-# TaskBarShowAPMAuto=1 # 0/1
+TaskBarShowAPMAuto=0 # 0/1  
 
 #  Show battery status on task bar in time-format
-# TaskBarShowAPMTime=1 # 0/1
+TaskBarShowAPMTime=0 # 0/1  
 
 #  Show battery status in graph mode
-# TaskBarShowAPMGraph=1 # 0/1
+TaskBarShowAPMGraph=0 # 0/1  
 
 #  Show mailbox status on task bar
-# TaskBarShowMailboxStatus=1 # 0/1
+TaskBarShowMailboxStatus=0 # 0/1  
 
 #  Beep when new mail arrives
 # TaskBarMailboxStatusBeepOnNewMail=0 # 0/1
@@ -308,28 +308,28 @@
 # TaskBarShowWindowListMenu=1 # 0/1
 
 #  Show CPU status on task bar
-# TaskBarShowCPUStatus=1 # 0/1
+TaskBarShowCPUStatus=0 # 0/1  
 
 #  Show RAM usage in CPU status tool tip
-# CPUStatusShowRamUsage=1 # 0/1
+CPUStatusShowRamUsage=0 # 0/1  
 
 #  Show swap usage in CPU status tool tip
-# CPUStatusShowSwapUsage=1 # 0/1
+CPUStatusShowSwapUsage=0 # 0/1  
 
 #  Show ACPI temperature in CPU status tool tip
-# CPUStatusShowAcpiTemp=1 # 0/1
+CPUStatusShowAcpiTemp=0 # 0/1  
 
 #  Show ACPI temperature in CPU status bar
 # CPUStatusShowAcpiTempInGraph=0 # 0/1
 
 #  Show CPU frequency in CPU status tool tip
-# CPUStatusShowCpuFreq=1 # 0/1
+CPUStatusShowCpuFreq=0 # 0/1  
 
 #  Show memory usage status on task bar (Linux only)
-# TaskBarShowMEMStatus=1 # 0/1
+TaskBarShowMEMStatus=0 # 0/1  
 
 #  Show network status on task bar
-# TaskBarShowNetStatus=1 # 0/1
+TaskBarShowNetStatus=0 # 0/1  
 
 #  Show a button to collapse the taskbar
 # TaskBarShowCollapseButton=0 # 0/1
@@ -380,16 +380,16 @@
 # ShowSettingsMenu=1 # 0/1
 
 #  Show focus mode submenu in the program menu
-# ShowFocusModeMenu=1 # 0/1
+ShowFocusModeMenu=0 # 0/1  
 
 #  Show themes submenu in the program menu
-# ShowThemesMenu=1 # 0/1
+ShowThemesMenu=0 # 0/1  
 
 #  Show logout menu in the program menu
 # ShowLogoutMenu=1 # 0/1
 
 #  Show the help menu item in the program menu
-# ShowHelp=1 # 0/1
+ShowHelp=0 # 0/1  
 
 #  Show logout submenu in the program menu
 # ShowLogoutSubMenu=1 # 0/1
@@ -398,7 +398,7 @@
 # ShowAbout=1 # 0/1
 
 #  Show the run menu item in the program menu
-# ShowRun=1 # 0/1
+ShowRun=0 # 0/1  
 
 #  Show the window menu item in the program menu
 # ShowWindowList=1 # 0/1
@@ -413,7 +413,7 @@
 # EnableAddressBar=1 # 0/1
 
 #  Show address bar in task bar
-# ShowAddressBar=1 # 0/1
+ShowAddressBar=0 # 0/1  
 
 #  Overrides automatic multiple byte detection
 # MultiByte=1 # 0/1
@@ -596,7 +596,7 @@
 # LockCommand=""
 
 #  Command to run on clock
-# ClockCommand="xclock -name icewm -title Clock"
+ClockCommand="gsimplecal"
 
 #  WM_CLASS to allow runonce for ClockCommand
 # ClockClassHint="icewm.XClock"
@@ -616,12 +616,15 @@
 # LogoutCancelCommand=""
 
 #  Command to shutdown the system
+ShutdownCommand="sudo shutdown"
 # ShutdownCommand="test -e /run/systemd/system && systemctl poweroff"
 
 #  Command to reboot the system
+RebootCommand="sudo reboot"
 # RebootCommand="test -e /run/systemd/system && systemctl reboot"
 
 #  Command to send the system to standby mode
+SuspendCommand="sudo zzz"
 # SuspendCommand="test -e /run/systemd/system && systemctl suspend"
 
 #  Command to run on CPU status
@@ -631,7 +634,7 @@
 # CPUStatusClassHint="top.XTerm"
 
 #  Combine all CPUs to one
-# CPUStatusCombine=1 # 0/1
+CPUStatusCombine=0 # 0/1  
 
 #  Command to run on Net status
 # NetStatusCommand="xterm -name 'ss' -title 'Socket Statistics' -hold -e sh -c 'which ss > /dev/null && watch -t ss -putswl || netstat -c'"
