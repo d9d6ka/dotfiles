@@ -1,0 +1,51 @@
+menu "Приложения" /usr/share/icons/Adwaita/16x16/legacy/applications-other.png {
+  menu "Аудио и видео" _none_ {
+    prog "DeaDBeeF" /usr/share/icons/hicolor/16x16/apps/deadbeef.png deadbeef 
+    prog "Volctl" /usr/share/icons/Adwaita/16x16/legacy/multimedia-volume-control.png volctl
+    prog "Проигрыватель mpv" /usr/share/icons/hicolor/16x16/apps/mpv.png mpv --player-operation-mode=pseudo-gui -- 
+    prog "Регулятор громкости PulseAudio" /usr/share/icons/Adwaita/16x16/legacy/multimedia-volume-control.png pavucontrol
+  }
+  menu "Игры" /usr/share/icons/Adwaita/16x16/legacy/applications-games.png {
+    prog "Пасьянс Айслериот" /usr/share/icons/hicolor/16x16/apps/gnome-aisleriot.png sol
+  }
+  menu "Настройки" /usr/share/icons/Adwaita/16x16/legacy/preferences-desktop.png {
+    prog "Менеджер настройки Openbox" /usr/share/pixmaps/obconf.png obconf 
+    prog "Настройка внешнего вида" /usr/share/icons/Adwaita/16x16/legacy/preferences-desktop-theme.png lxappearance
+    prog "Настройка межсетевого экрана" /usr/share/icons/hicolor/48x48/apps/gufw.png gufw
+    prog "Настройки LightDM GTK+ Greeter" /usr/share/icons/hicolor/16x16/apps/lightdm-gtk-greeter-settings.png lightdm-gtk-greeter-settings-pkexec
+    prog "Настройки Qt5" /usr/share/icons/Adwaita/16x16/legacy/preferences-desktop-theme.png qt5ct
+    prog "Параметры рабочего стола" /usr/share/icons/Adwaita/16x16/places/user-desktop.png pcmanfm --desktop-pref
+    prog "Расширенная конфигурация сети" /usr/share/icons/Adwaita/16x16/legacy/preferences-system-network.png nm-connection-editor
+  }
+  menu "Офис" /usr/share/icons/Adwaita/16x16/legacy/applications-office.png {
+    prog "LibreOffice" /usr/share/icons/hicolor/16x16/apps/libreoffice-startcenter.png libreoffice 
+    prog "LibreOffice Base" /usr/share/icons/hicolor/16x16/apps/libreoffice-base.png libreoffice --base 
+    prog "LibreOffice Calc" /usr/share/icons/hicolor/16x16/apps/libreoffice-calc.png libreoffice --calc 
+    prog "LibreOffice Draw" /usr/share/icons/hicolor/16x16/apps/libreoffice-draw.png libreoffice --draw 
+    prog "LibreOffice Impress" /usr/share/icons/hicolor/16x16/apps/libreoffice-impress.png libreoffice --impress 
+    prog "LibreOffice Math" /usr/share/icons/hicolor/16x16/apps/libreoffice-math.png libreoffice --math 
+    prog "LibreOffice Writer" /usr/share/icons/hicolor/16x16/apps/libreoffice-writer.png libreoffice --writer 
+    prog "Zathura" /usr/share/icons/hicolor/16x16/apps/org.pwmt.zathura.png zathura 
+  }
+  menu "Сеть и Интернет" /usr/share/icons/Adwaita/16x16/legacy/applications-internet.png {
+    prog "Tor Browser" /home/zyamalov/.local/share/tor-browser_ru/Browser/browser/chrome/icons/default/default128.png sh -c '"/home/zyamalov/.local/share/tor-browser_ru/Browser/start-tor-browser" --detach || ([ !  -x "/home/zyamalov/.local/share/tor-browser_ru/Browser/start-tor-browser" ] && "$(dirname "$*")"/Browser/start-tor-browser --detach)' dummy /home/zyamalov/.local/share/applications/start-tor-browser.desktop
+    prog "qutebrowser" /usr/share/icons/hicolor/16x16/apps/qutebrowser.png qutebrowser 
+    prog "Веб-браузер Firefox" /usr/share/icons/hicolor/16x16/apps/firefox.png firefox 
+  }
+  menu "Система" /usr/share/icons/Adwaita/16x16/legacy/applications-system.png {
+    prog "Alacritty" _none_ alacritty
+    prog "GParted" /usr/share/icons/hicolor/16x16/apps/gparted.png /usr/bin/gparted-pkexec 
+    prog "Htop" /usr/share/pixmaps/htop.png xterm -e htop
+    prog "Tint2" _none_ tint2
+    prog "Файловый менеджер PCManFM" /usr/share/icons/Adwaita/16x16/legacy/system-file-manager.png pcmanfm 
+  }
+  menu "Стандартные" /usr/share/icons/Adwaita/16x16/legacy/applications-accessories.png {
+    prog "CopyQ" /usr/share/icons/hicolor/16x16/apps/copyq.png copyq
+    prog "Neovim" /usr/share/pixmaps/nvim.png xterm -e nvim 
+    prog "Xarchiver" /usr/share/icons/hicolor/16x16/apps/xarchiver.png xarchiver 
+    prog "compton" /usr/share/icons/hicolor/48x48/apps/compton.png compton
+    prog "nitrogen" /usr/share/icons/hicolor/16x16/apps/nitrogen.png nitrogen
+    prog "picom" _none_ picom
+    prog "Диспетчер Kvantum" _none_ kvantummanager
+  }
+}

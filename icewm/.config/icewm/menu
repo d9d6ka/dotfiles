@@ -1,0 +1,9 @@
+# This is an example for icewm menu definition file.
+# It will be installed as /usr/share/icewm/menu.
+# Place your variants in /etc/icewm or in $HOME/.icewm since
+# modifications to this file will be overwritten when you reinstall icewm.
+#
+prog "Terminal" terminal alacritty
+prog Firefox firefox firefox
+prog "Refresh menu" terminal xdgmenumaker -i -f icewm > ~/.config/icewm/appmenu
+include appmenu
