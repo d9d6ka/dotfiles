@@ -257,10 +257,10 @@
 TaskBarShowAPMAuto=0 # 0/1  
 
 #  Show battery status on task bar in time-format
-TaskBarShowAPMTime=0 # 0/1  
+# TaskBarShowAPMTime=1 # 0/1  
 
 #  Show battery status in graph mode
-TaskBarShowAPMGraph=0 # 0/1  
+# TaskBarShowAPMGraph=0 # 0/1  
 
 #  Show mailbox status on task bar
 TaskBarShowMailboxStatus=0 # 0/1  
@@ -970,115 +970,115 @@ WorkspaceNames=" 1 ", " 2 ", " 3 ", " 4 "
 # TitleFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the title bar font.
-# TitleFontNameXft="sans-serif:size=12"
+TitleFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the menu font.
 # MenuFontName="-*-sans-bold-r-*-*-*-100-*-*-*-*-*-*"
 
 #  Name of the menu font.
-# MenuFontNameXft="sans-serif:size=10:bold"
+MenuFontNameXft="FiraCode Nerd Font:size=8:bold"
 
 #  Name of the status display font.
 # StatusFontName="-*-monospace-bold-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the status display font.
-# StatusFontNameXft="monospace:size=12:bold"
+StatusFontNameXft="FiraCode Nerd Font:size=8:bold"
 
 #  Name of the font for Alt+Tab switcher window.
 # QuickSwitchFontName="-*-monospace-bold-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the font for Alt+Tab switcher window.
-# QuickSwitchFontNameXft="monospace:size=12:bold"
+QuickSwitchFontNameXft="FiraCode Nerd Font:size=8:bold"
 
 #  Name of the normal button font.
 # NormalButtonFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the normal button font.
-# NormalButtonFontNameXft="sans-serif:size=12"
+NormalButtonFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the active button font.
 # ActiveButtonFontName="-*-sans-bold-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the active button font.
-# ActiveButtonFontNameXft="sans-serif:size=12:bold"
+ActiveButtonFontNameXft="FiraCode Nerd Font:size=8:bold"
 
 #  Name of the normal task bar item font.
 # NormalTaskBarFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the normal task bar item font.
-# NormalTaskBarFontNameXft="sans-serif:size=12"
+NormalTaskBarFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the active task bar item font.
 # ActiveTaskBarFontName="-*-sans-bold-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the active task bar item font.
-# ActiveTaskBarFontNameXft="sans-serif:size=12:bold"
+ActiveTaskBarFontNameXft="FiraCode Nerd Font:size=8:bold"
 
 #  Name of the tool button font (fallback: NormalButtonFontName).
 # ToolButtonFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the tool button font (fallback: NormalButtonFontName).
-# ToolButtonFontNameXft="sans-serif:size=12"
+ToolButtonFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the normal workspace button font (fallback: NormalButtonFontName).
 # NormalWorkspaceFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the normal workspace button font (fallback: NormalButtonFontName).
-# NormalWorkspaceFontNameXft="sans-serif:size=12"
+NormalWorkspaceFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the active workspace button font (fallback: ActiveButtonFontName).
 # ActiveWorkspaceFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the active workspace button font (fallback: ActiveButtonFontName).
-# ActiveWorkspaceFontNameXft="sans-serif:size=12"
+ActiveWorkspaceFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the mini-window font.
 # MinimizedWindowFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the mini-window font.
-# MinimizedWindowFontNameXft="sans-serif:size=12"
+MinimizedWindowFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the window list font.
 # ListBoxFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the window list font.
-# ListBoxFontNameXft="sans-serif:size=12"
+ListBoxFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the tool tip font.
 # ToolTipFontName="-*-sans-medium-r-*-*-*-120-*-*-*-*-*-*"
 
 #  Name of the tool tip font.
-# ToolTipFontNameXft="sans-serif:size=12"
+ToolTipFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the task bar clock font.
 # ClockFontName="-*-monospace-medium-r-*-*-*-140-*-*-*-*-*-*"
 
 #  Name of the task bar clock font.
-# ClockFontNameXft="monospace:size=12"
+ClockFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the task bar temperature font.
 # TempFontName="-*-monospace-medium-r-*-*-*-140-*-*-*-*-*-*"
 
 #  Name of the task bar temperature font.
-# TempFontNameXft="monospace:size=12"
+TempFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the task bar battery font.
 # ApmFontName="-*-monospace-medium-r-*-*-*-140-*-*-*-*-*-*"
 
 #  Name of the task bar battery font.
-# ApmFontNameXft="monospace:size=12"
+ApmFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the input field font.
 # InputFontName="-*-monospace-medium-r-*-*-*-140-*-*-*-*-*-*"
 
 #  Name of the input field font.
-# InputFontNameXft="monospace:size=12"
+InputFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Name of the label font.
 # LabelFontName="-*-sans-medium-r-*-*-*-140-*-*-*-*-*-*"
 
 #  Name of the label font.
-# LabelFontNameXft="sans-serif:size=12"
+LabelFontNameXft="FiraCode Nerd Font:size=8"
 
 #  Background of dialog windows
 # ColorDialog="rgb:C0/C0/C0"

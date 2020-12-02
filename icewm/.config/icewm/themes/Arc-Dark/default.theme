@@ -100,5 +100,5 @@ SmallIconSize=16
 
 #Fonts
 TitleFontName="-*-verdana-bold-r-normal-*-13-*-*-*-p-*-koi8-r"
-TitleFontNameXft="verdana:size=10:bold"
+TitleFontNameXft="FiraCode Nerd Font:size=8:bold"
 
