@@ -1,19 +1,20 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-function run {
-    pgrep -f $(basename -- $1)
+run () {
+    pgrep -f $(basename -- $1) > /dev/null
     if [ $? -eq 1 ]; then
         $@ &
     fi
 }
 
-function hlt {
+hlt () {
     for i in $(pgrep -f $(basename -- $1)); do
         kill $i
     done
 }
 
 # Hotkey daemon
+hlt sxhkd
 run sxhkd
 
 # Low-level X apps preferences

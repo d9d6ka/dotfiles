@@ -1,13 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-function run {
+run () {
     pgrep -f $(basename -- $1)
     if [ $? -eq 1 ]; then
         $@ &
     fi
 }
 
-function hlt {
+hlt () {
     for i in $(pgrep -f $(basename -- $1)); do
         kill $i
     done
@@ -20,7 +20,7 @@ run xrdb -merge ~/.Xresources
 run /usr/libexec/polkit-mate-authentication-agent-1
 
 # Notifications
-run dunst &
+run dunst
 
 # Compositor
 run compton -b
