@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
 function run {
-    tmp=$(basename -- $1)
-    pgrep -x $tmp > /dev/null
+    pgrep -f $(basename -- $1)
     if [ $? -eq 1 ]; then
         $@ &
     fi
+}
+
+function hlt {
+    for i in $(pgrep -f $(basename -- $1)); do
+        kill $i
+    done
 }
 
 # Hotkey daemon
@@ -18,12 +23,13 @@ run xrdb -merge ~/.Xresources
 run /usr/libexec/polkit-mate-authentication-agent-1
 
 # Notifications
-run dunst &
+run dunst
 
 # Compositor
 run compton -b
 
 # Polybar
+hlt polybar
 ~/.config/polybar/launch.sh
 
 # NetworkManager applet
@@ -34,7 +40,7 @@ run clipmenud
 
 # Keyboard layouts
 run setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle
-killall xxkb
+hlt xxkb
 run xxkb
 
 # Wallpaper
@@ -50,6 +56,6 @@ run volctl
 run mate-power-manager
 
 # Bspswallow
-killall bspswallow
+hlt bspswallow
 run bspswallow
 

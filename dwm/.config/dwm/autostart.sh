@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 
 function run {
-    tmp=$(basename -- $1)
-    pgrep -x $tmp > /dev/null
-    if [ $? -eq 1 ]
-    then
+    pgrep -f $(basename -- $1)
+    if [ $? -eq 1 ]; then
         $@ &
     fi
 }
 
+function hlt {
+    for i in $(pgrep -f $(basename -- $1)); do
+        kill $i
+    done
+}
+
 # Low-level X apps preferences
-xrdb -merge ~/.Xresources
+run xrdb -merge ~/.Xresources
 
 # Mate Polkit Agent
 run /usr/libexec/polkit-mate-authentication-agent-1
@@ -29,7 +33,7 @@ run clipmenud
 
 # Keyboard layouts
 run setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle
-killall xxkb
+hlt xxkb
 run xxkb
 
 # Wallpaper
