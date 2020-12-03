@@ -8,17 +8,6 @@ function run {
     fi
 }
 
-function hlt {
-    tmp=$(basename -- $1)
-    pgrep -x $tmp > /dev/null
-    if [ $? -eq 0 ]; then
-        for i in $(pidof $tmp); do
-            kill $i
-        done
-        sleep 1
-    fi
-}
-
 # Hotkey daemon
 run sxhkd
 
@@ -45,7 +34,7 @@ run clipmenud
 
 # Keyboard layouts
 run setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle
-hlt xxkb
+killall xxkb
 run xxkb
 
 # Wallpaper
@@ -59,4 +48,8 @@ run volctl
 
 # Power manager
 run mate-power-manager
+
+# Bspswallow
+killall bspswallow
+run bspswallow
 
