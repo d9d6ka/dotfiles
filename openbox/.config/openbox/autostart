@@ -28,7 +28,7 @@ volctl &
 mate-power-manager &
 
 # Keyboard layouts
-pkill xxkb
+killall xxkb
 (setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle && xxkb) &
 
 # DBus
