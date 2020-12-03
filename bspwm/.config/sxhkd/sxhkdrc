@@ -1,16 +1,17 @@
 #---BSPWM Bindings
 
 # Restart bspwm
-super + shift + w
+super + shift + control + q
     bspc wm -r
 
 # Restart hotkey daemon
-super + shift + x
+super + shift + control + x
     pkill sxhkd && sxhkd &
 
 # Kill Window
 super + shift + c
-    xdo close
+    bspc node -c
+    #xdo close
 
 # Focus on window in direction
 super + {h,j,k,l}
@@ -82,6 +83,9 @@ super + Return
     $TERMINAL
 
 super + shift + Return
+    rofi -show drun
+
+super + shift + control + Return
     rofi -show run
 
 super + u
