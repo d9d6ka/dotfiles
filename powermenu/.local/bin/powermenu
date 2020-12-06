@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-res=$(rofi -dmenu -lines 6 -p "Choose:" <<EOF
+res=$(dmenu -i -F -c -bw 2 -l 6 -p "Choose:" <<EOF
 lock
 suspend
 logout
