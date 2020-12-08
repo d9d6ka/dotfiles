@@ -1,5 +1,4 @@
 export $(dbus-launch)
-export GPG_TTY=$(tty)
 export PATH=$PATH:$(du ~/.local/bin | cut -f2 | cut -d/ -f1-6 | sort -u | tr '\n' ':' | sed 's/:*$//'):~/go/bin:~/.cabal/bin
 export TERMINAL=alacritty
 export EDITOR=nvim
