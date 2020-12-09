@@ -25,12 +25,15 @@ function __git_status
     end
         
     # Check dirty/unpushed
-    if test (git status --short | wc -l) -gt 0
+    if test (git status -unormal --porcelain | wc -l) -gt 0
         set git_color $fish_color_status
         set git_dirty '*'
     else if test (git log origin/$git_remote_branch..$git_branch | grep -c "commit") -gt 0
         set git_color $fish_color_user
-        set git_dirty '*'
+        set git_dirty '>'
+    else if test (git log $git_branch..origin/$git_remote_branch | grep -c "commit") -gt 0
+        set git_color yellow
+        set git_dirty '<'
     else
         set git_color $fish_color_user
     end
