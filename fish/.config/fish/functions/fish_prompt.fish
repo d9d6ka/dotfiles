@@ -1,3 +1,44 @@
+function __git_status
+    # Check if in git repo
+    git rev-parse --absolute-git-dir > /dev/null 2>&1
+    if test $status -ne 0
+        return 1
+    end
+    
+    set -l git_branch
+    set -l git_remote_branch
+    set -l git_dirty
+    set -l git_color
+    set -l git_prefix
+    
+    # Set prefix for git part
+    set git_prefix ' on '
+    
+    # Verify remote branch
+    set git_branch (git branch --show-current)
+    if test (git branch --all | grep -c "remotes/[^/]*/$git_branch\$") -gt 0
+        set git_remote_branch $git_branch
+    else if test (git branch --all | grep -c "remotes/[^/]*/main\$") -gt 0
+        set git_remote_branch main
+    else
+        set git_remote_branch master
+    end
+        
+    # Check dirty/unpushed
+    if test (git status --short | wc -l) -gt 0
+        set git_color $fish_color_status
+        set git_dirty '*'
+    else if test (git log origin/$git_remote_branch..$git_branch | grep -c "commit") -gt 0
+        set git_color $fish_color_user
+        set git_dirty '*'
+    else
+        set git_color $fish_color_user
+    end
+    
+    # Print git branch info
+    echo -n -s (set_color normal) "$git_prefix" (set_color $git_color) "$git_branch$git_dirty" (set_color normal) 
+end
+
 function fish_prompt --description 'Write out the prompt'
     # Save our status
     set -l last_pipestatus $pipestatus
@@ -22,40 +63,8 @@ function fish_prompt --description 'Write out the prompt'
             set suffix '>'
     end
 
-    # Get git status
-    set -l git_branch
-    set -l git_remote_branch
-    set -l git_dirty
-    set -l git_color
-    set -l git_prefix
-    if test -d .git
-        # Set prefix for git part
-        set git_prefix ' on '
-
-        # Verify remote branch
-        set git_branch (git branch --show-current)
-        if test (git branch --all | grep -c "remotes/[^/]*/$git_branch\$") -gt 0
-            set git_remote_branch $git_branch
-        else if test (git branch --all | grep -c "remotes/[^/]*/main\$") -gt 0
-            set git_remote_branch main
-        else
-            set git_remote_branch master
-        end
-        
-        # Check dirty/unpushed
-        if test (git status --short | wc -l) -gt 0
-            set git_color $fish_color_status
-            set git_dirty '*'
-        else if test (git log origin/$git_remote_branch..$git_branch | grep -c "commit") -gt 0
-            set git_color $fish_color_user
-            set git_dirty '*'
-        else
-            set git_color $fish_color_user
-        end
-    end
-
     echo -n -s -e '\n' \
-        (set_color $color_usr) "$USER" (set_color normal) @ (prompt_hostname) "$git_prefix" (set_color $git_color) "$git_branch$git_dirty" '\n' \
+        (set_color $color_usr) "$USER" (set_color normal) @ (prompt_hostname) (__git_status) '\n' \
         (set_color $color_cwd) (prompt_pwd) ' ' (__fish_print_pipestatus " [" "]" "|" (set_color $fish_color_status) (set_color --bold $fish_color_status) $last_pipestatus) \
         (set_color normal) "$suffix "
 end
