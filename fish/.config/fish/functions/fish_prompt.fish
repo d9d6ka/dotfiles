@@ -17,9 +17,9 @@ function __git_status
     
     # Verify remote branch
     set git_branch (git branch --show-current)
-    if test (git branch --all | grep -c "remotes/[^/]*/$git_branch\$") -gt 0
+    if test (git branch --all | grep -c "remotes/$git_remote/$git_branch\$") -gt 0
         set git_remote_branch $git_branch
-    else if test (git branch --all | grep -c "remotes/[^/]*/main\$") -gt 0
+    else if test (git branch --all | grep -c "remotes/$git_remote/main\$") -gt 0
         set git_remote_branch main
     else
         set git_remote_branch master
@@ -29,10 +29,10 @@ function __git_status
     if test (git status -unormal --porcelain | wc -l) -gt 0
         set git_color $fish_color_status
         set git_dirty '*'
-    else if test (git log origin/$git_remote_branch..$git_branch | grep -c "commit") -gt 0
+    else if test (git log $git_remote/$git_remote_branch..$git_branch | grep -c "commit") -gt 0
         set git_color $fish_color_user
         set git_dirty '>'
-    else if test (git log $git_branch..origin/$git_remote_branch | grep -c "commit") -gt 0
+    else if test (git log $git_branch..$git_remote/$git_remote_branch | grep -c "commit") -gt 0
         set git_color yellow
         set git_dirty '<'
     else
