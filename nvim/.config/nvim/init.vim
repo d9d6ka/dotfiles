@@ -22,7 +22,10 @@ silent! call plug#begin()
     Plug 'arcticicestudio/nord-vim'
     Plug 'lambdalisue/fern.vim'
     Plug 'antoinemadec/FixCursorHold.nvim'
-        
+    if has('unix')
+        Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+    endif        
+
     " Editing
     Plug 'terryma/vim-multiple-cursors'
     Plug 'haya14busa/incsearch.vim'
@@ -84,6 +87,26 @@ let g:lightline = {
       \ }
 autocmd ColorScheme * highlight Visual cterm=reverse
 colorscheme nord
+
+" cursorline and cursorcolumn
+au WinLeave * set nocursorline nocursorcolumn
+au BufEnter,WinEnter * set cursorline cursorcolumn
+
+" hexokinase
+if has('unix')
+    let g:Hexokinase_highlighters = ['backgroundfull']
+    let g:Hexokinase_refreshEvents = ['InsertLeave']
+    let g:Hexokinase_optInPatterns = [
+    \     'full_hex',
+    \     'triple_hex',
+    \     'rgb',
+    \     'rgba',
+    \     'hsl',
+    \     'hsla',
+    \     'colour_names'
+    \ ]
+    autocmd VimEnter * HexokinaseTurnOn
+endif
 
 " Tab and Indent
 set tabstop=4
