@@ -3,8 +3,8 @@
 res=$(dmenu -i -F -c -bw 2 -l 6 -p "Choose:" <<EOF
 lock
 suspend
-logout
 hibernate
+logout
 reboot
 shutdown
 EOF
@@ -22,10 +22,14 @@ if [ $res = "suspend" ]; then
 fi
 if [ $res = "logout" ]; then
     case "$DESKTOP_SESSION" in
+        "awesome") echo 'awesome.quit()' | awesome-client ;;
         "bspwm") bspc quit ;;
         "dwm") xdotool key Super+Shift+q ;;
-        "openbox") openbox --exit ;;
         "i3") i3-msg exit ;;
+        "icewm") pkill icewm ;;
+        "icewm-session") pkill icewm ;;
+        "jwm") jwm -exit ;;
+        "openbox") openbox --exit ;;
     esac
 fi
 if [ $res = "hibernate" ]; then
