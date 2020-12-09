@@ -5,6 +5,7 @@ function __git_status
         return 1
     end
     
+    set -l git_remote (git remote -v | grep '(push)' | head -n1 | awk '{print $1}')
     set -l git_branch
     set -l git_remote_branch
     set -l git_dirty
