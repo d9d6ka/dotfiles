@@ -22,10 +22,7 @@ silent! call plug#begin()
     Plug 'arcticicestudio/nord-vim'
     Plug 'lambdalisue/fern.vim'
     Plug 'antoinemadec/FixCursorHold.nvim'
-    if has('unix')
-        Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
-    endif
-    
+        
     " Editing
     Plug 'terryma/vim-multiple-cursors'
     Plug 'haya14busa/incsearch.vim'
@@ -43,45 +40,30 @@ silent! call plug#begin()
     " Syntax check
     Plug 'dense-analysis/ale'
     
-    " Deoplete
-    if has('nvim')
-        Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    else
-        Plug 'Shougo/deoplete.nvim'
-        Plug 'roxma/nvim-yarp'
-        Plug 'roxma/vim-hug-neovim-rpc'
-    endif
-
-    " Python autocomplete
-    Plug 'davidhalter/jedi-vim'
-    Plug 'deoplete-plugins/deoplete-jedi'
+    " CoC
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
     " Git
     Plug 'tpope/vim-fugitive'
 call plug#end()
 
-if has('unix')
-    " hexokinase
-    let g:Hexokinase_highlighters = ['backgroundfull']
-    let g:Hexokinase_refreshEvents = ['InsertLeave']
-    let g:Hexokinase_optInPatterns = [
-    \     'full_hex',
-    \     'triple_hex',
-    \     'rgb',
-    \     'rgba',
-    \     'hsl',
-    \     'hsla',
-    \     'colour_names'
-    \ ]
-    autocmd VimEnter * HexokinaseTurnOn
+" CoC
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
-" Deoplete
-let g:deoplete#enable_at_startup = 1
-set completeopt=noinsert,menuone,noselect
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
 
-" jedi-vim
-let g:jedi#show_call_signatures = ""
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " UI configuration
 syntax on
@@ -102,9 +84,6 @@ let g:lightline = {
       \ }
 autocmd ColorScheme * highlight Visual cterm=reverse
 colorscheme nord
-
-au WinLeave * set nocursorline nocursorcolumn
-au BufEnter,WinEnter * set cursorline cursorcolumn
 
 " Tab and Indent
 set tabstop=4
