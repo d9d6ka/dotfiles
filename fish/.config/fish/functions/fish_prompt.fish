@@ -24,14 +24,30 @@ function fish_prompt --description 'Write out the prompt'
 
     # Get git status
     set -l git_branch
+    set -l git_remote_branch
     set -l git_dirty
     set -l git_color
     set -l git_prefix
     if test -d .git
+        # Set prefix for git part
         set git_prefix ' on '
+
+        # Verify remote branch
         set git_branch (git branch --show-current)
+        if test (git branch --all | grep -c "remotes/[^/]*/$git_branch\$") -gt 0
+            set git_remote_branch $git_branch
+        else if test (git branch --all | grep -c "remotes/[^/]*/main\$") -gt 0
+            set git_remote_branch main
+        else
+            set git_remote_branch master
+        end
+        
+        # Check dirty/unpushed
         if test (git status --short | wc -l) -gt 0
             set git_color $fish_color_status
+            set git_dirty '*'
+        else if test (git log origin/$git_remote_branch..$git_branch | grep -c "commit") -gt 0
+            set git_color $fish_color_user
             set git_dirty '*'
         else
             set git_color $fish_color_user
