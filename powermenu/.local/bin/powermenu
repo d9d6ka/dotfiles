@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-res=$(dmenu -i -F -c -bw 2 -l 6 -p "Choose:" <<EOF
-lock
-suspend
-hibernate
-logout
-reboot
-shutdown
-EOF
-)
+case ${POWERMENU_LAUNCHER:-dmenu} in
+    rofi) res=$(cat "$HOME/.local/share/powermenu" | xargs -0 echo -en | rofi -dmenu -l 6 -p "Choose:" -show-icons) ;;
+    *)    res=$(cat "$HOME/.local/share/powermenu" | xargs -0 echo -en | dmenu -i -F -c -g 1 -bw 2 -l 6 -p "Choose: ") ;;
+esac
 
 echo "$res"
 

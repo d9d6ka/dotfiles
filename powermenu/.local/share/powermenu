@@ -1,0 +1,6 @@
+lock\0icon\x1fsystem-lock-screen
+suspend\0icon\x1fsystem-suspend
+hibernate\0icon\x1fsystem-hibernate
+logout\0icon\x1fsystem-log-out
+reboot\0icon\x1fsystem-reboot
+shutdown\0icon\x1fsystem-shutdown
