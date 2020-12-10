@@ -60,13 +60,13 @@
 
 #mainbox {
     border:  2;
-    padding: 10;
+    padding: 5;
 }
 
 #message {
     border:       2px 2px 2px ;
     border-color: @separatorcolor;
-    padding:      10 ;
+    padding:      0 ;
 }
 
 #textbox {
@@ -75,13 +75,13 @@
 
 #listview {
     fixed-height: 0;
-    padding:	  5 0 0;
-    spacing:      5px ;
+    padding:	  0 0 0;
+    spacing:      0px ;
 }
 
 #element {
     border:  0;
-    padding: 5px ;
+    padding: 0 5 0 ;
 }
 
 #element.normal.normal {
@@ -137,7 +137,7 @@
 #inputbar {
     spacing:    5;
     text-color: @normal-foreground;
-    padding:    5px ;
+    padding:    0 5 0 ;
     border:	0 0 1;
     border-color: @separatorcolor;
 }
