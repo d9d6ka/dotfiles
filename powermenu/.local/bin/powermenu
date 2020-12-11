@@ -25,6 +25,7 @@ if [ $res = "logout" ]; then
         "icewm-session") pkill icewm ;;
         "jwm") jwm -exit ;;
         "openbox") openbox --exit ;;
+        "qtile") xdotool key Super+Shift+q ;;
     esac
 fi
 if [ $res = "hibernate" ]; then
