@@ -16,8 +16,7 @@ URxvt*imLocale: ru_RU.UTF-8
 URxvt*termName: rxvt-unicode-256color
 Urxvt*buffered: false
 URxvt.intensityStyles: false
-URxvt.font: xft:FiraMono Nerd Font:size=10, \
-            xft:Monospace:style=Medium:size=10   
+URxvt.font: xft:FiraMono Nerd Font:size=10, xft:Monospace:style=Medium:size=10   
 URxvt.saveLines: 2000
 URxvt.scrollBar: false
 URxvt.cursorColor: white
