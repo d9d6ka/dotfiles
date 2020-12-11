@@ -37,6 +37,7 @@ hlt polybar
 run nm-applet
 
 # Clipboard manager
+hlt clipmenud
 run clipmenud
 
 # Keyboard layouts

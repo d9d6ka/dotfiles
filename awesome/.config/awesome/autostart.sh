@@ -29,6 +29,7 @@ run compton -b
 run nm-applet
 
 # Clipboard manager
+hlt clipmenud
 run clipmenud
 
 # Keyboard layouts
