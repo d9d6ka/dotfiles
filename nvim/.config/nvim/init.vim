@@ -53,6 +53,9 @@ silent! call plug#begin()
 
     " Git
     Plug 'tpope/vim-fugitive'
+
+    " Vimwiki
+    Plug 'vimwiki/vimwiki'
 call plug#end()
 
 " === Vim settings ===
@@ -155,3 +158,16 @@ map g# <Plug>(incsearch-nohl-g#)
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:qs_lazy_highlight = 1
 
+" --- Vimwiki ---
+let wiki1 = {}
+let wiki1.auto_export = 1
+let wiki1.automatic_nested_syntaxes = 1
+if has('unix')
+    let wiki1.path = '~/Документы/vimwiki/wiki'
+    let wiki1.path_html = '~/Документы/vimwiki/html'
+endif
+if (has('win32') || has('win64'))
+    let wiki1.path = 'D:/git/vimwiki/wiki'
+    let wiki1.path_html = 'D:/git/vimwiki/html'
+endif
+let g:vimwiki_list = [wiki1]
