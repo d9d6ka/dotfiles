@@ -13,7 +13,7 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=8", "FiraCode Nerd Font:size=8" };
+static const char *fonts[]          = { "Ubuntu Mono:size=10", "Ubuntu Nerd Font Mono:size=8", "monospace:size=8" };
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
@@ -80,7 +80,7 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[]  = { "alacritty", NULL };
+static const char *termcmd[]  = { "st", NULL };
 static const char *dmenucmd[] = { "rofi", "-show", "run", NULL };
 static const char *dmenudcmd[] = { "rofi", "-show", "drun", "-show-icons", NULL };
 static const char *pmenucmd[] = { "powermenu", NULL };
