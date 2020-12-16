@@ -59,9 +59,14 @@ silent! call plug#begin()
 call plug#end()
 
 " === Vim settings ===
+" --- color scheme ---
+autocmd ColorScheme * highlight Visual cterm=reverse
+colorscheme nord
+
 " --- UI configuration ---
+set nocompatible
+filetype plugin on
 syntax on
-syntax enable
 set number
 set relativenumber
 set termguicolors
@@ -72,10 +77,6 @@ set softtabstop=4
 set shiftwidth=4
 set autoindent
 set expandtab
-
-" --- color scheme ---
-autocmd ColorScheme * highlight Visual cterm=reverse
-colorscheme nord
 
 " --- cursorline and cursorcolumn ---
 au WinLeave * set nocursorline nocursorcolumn
@@ -165,9 +166,12 @@ let wiki1.automatic_nested_syntaxes = 1
 if has('unix')
     let wiki1.path = '~/Документы/vimwiki/wiki'
     let wiki1.path_html = '~/Документы/vimwiki/html'
+    let wiki1.template_path = '~/Документы/vimwiki'
 endif
 if (has('win32') || has('win64'))
     let wiki1.path = 'D:/git/vimwiki/wiki'
     let wiki1.path_html = 'D:/git/vimwiki/html'
+    let wiki1.template_path = 'D:/git/vimwiki'
 endif
 let g:vimwiki_list = [wiki1]
+let g:vimwiki_global_ext = 0
