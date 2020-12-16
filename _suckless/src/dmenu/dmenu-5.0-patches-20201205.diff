@@ -1,0 +1,513 @@
+diff -ruN dmenu-orig/config.def.h dmenu-patched/config.def.h
+--- dmenu-orig/config.def.h	2020-09-02 19:37:07.000000000 +0300
++++ dmenu-patched/config.def.h	2020-12-05 09:04:40.401305321 +0300
+@@ -2,6 +2,9 @@
+ /* Default settings; can be overriden by command line. */
+ 
+ static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom     */
++static int fuzzy = 1;                      /* -F  option; if 0, dmenu doesn't use fuzzy matching     */
++static int centered = 0;                    /* -c option; centers dmenu on screen */
++static int min_width = 500;                    /* minimum width when centered */
+ /* -fn option overrides fonts[0]; default X11 font or font set */
+ static const char *fonts[] = {
+ 	"monospace:size=10"
+@@ -11,13 +14,19 @@
+ 	/*     fg         bg       */
+ 	[SchemeNorm] = { "#bbbbbb", "#222222" },
+ 	[SchemeSel] = { "#eeeeee", "#005577" },
++	[SchemeSelHighlight] = { "#ffc978", "#005577" },
++	[SchemeNormHighlight] = { "#ffc978", "#222222" },
+ 	[SchemeOut] = { "#000000", "#00ffff" },
+ };
+-/* -l option; if nonzero, dmenu uses vertical list with given number of lines */
++/* -l and -g options; controls number of lines and columns in grid if > 0 */
+ static unsigned int lines      = 0;
++static unsigned int columns    = 0;
+ 
+ /*
+  * Characters not considered part of a word while deleting words
+  * for example: " /?\"&[]"
+  */
+ static const char worddelimiters[] = " ";
++
++/* Size of the window border */
++static unsigned int border_width = 0;
+diff -ruN dmenu-orig/config.mk dmenu-patched/config.mk
+--- dmenu-orig/config.mk	2020-09-02 19:37:07.000000000 +0300
++++ dmenu-patched/config.mk	2020-12-05 08:59:53.647330589 +0300
+@@ -20,7 +20,7 @@
+ 
+ # includes and libs
+ INCS = -I$(X11INC) -I$(FREETYPEINC)
+-LIBS = -L$(X11LIB) -lX11 $(XINERAMALIBS) $(FREETYPELIBS)
++LIBS = -L$(X11LIB) -lX11 $(XINERAMALIBS) $(FREETYPELIBS) -lm
+ 
+ # flags
+ CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" $(XINERAMAFLAGS)
+diff -ruN dmenu-orig/dmenu.1 dmenu-patched/dmenu.1
+--- dmenu-orig/dmenu.1	2020-09-02 19:37:07.000000000 +0300
++++ dmenu-patched/dmenu.1	2020-12-05 08:59:21.250333444 +0300
+@@ -4,6 +4,8 @@
+ .SH SYNOPSIS
+ .B dmenu
+ .RB [ \-bfiv ]
++.RB [ \-g
++.IR columns ]
+ .RB [ \-l
+ .IR lines ]
+ .RB [ \-m
+@@ -40,6 +42,9 @@
+ .B \-b
+ dmenu appears at the bottom of the screen.
+ .TP
++.B \-c
++dmenu appears centered on the screen.
++.TP
+ .B \-f
+ dmenu grabs the keyboard before reading stdin if not reading from a tty. This
+ is faster, but will lock up X until stdin reaches end\-of\-file.
+@@ -47,8 +52,11 @@
+ .B \-i
+ dmenu matches menu items case insensitively.
+ .TP
++.BI \-g " columns"
++dmenu lists items in a grid with the given number of columns.
++.TP
+ .BI \-l " lines"
+-dmenu lists items vertically, with the given number of lines.
++dmenu lists items in a grid with the given number of lines.
+ .TP
+ .BI \-m " monitor"
+ dmenu is displayed on the monitor number supplied. Monitor numbers are starting
+diff -ruN dmenu-orig/dmenu.c dmenu-patched/dmenu.c
+--- dmenu-orig/dmenu.c	2020-09-02 19:37:07.000000000 +0300
++++ dmenu-patched/dmenu.c	2020-12-05 09:04:40.404305321 +0300
+@@ -1,6 +1,7 @@
+ /* See LICENSE file for copyright and license details. */
+ #include <ctype.h>
+ #include <locale.h>
++#include <math.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -15,6 +16,7 @@
+ #include <X11/extensions/Xinerama.h>
+ #endif
+ #include <X11/Xft/Xft.h>
++#include <X11/Xresource.h>
+ 
+ #include "drw.h"
+ #include "util.h"
+@@ -26,12 +28,13 @@
+ #define TEXTW(X)              (drw_fontset_getwidth(drw, (X)) + lrpad)
+ 
+ /* enums */
+-enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
++enum { SchemeNorm, SchemeSel, SchemeOut, SchemeNormHighlight, SchemeSelHighlight, SchemeLast }; /* color schemes */
+ 
+ struct item {
+ 	char *text;
+ 	struct item *left, *right;
+ 	int out;
++	double distance;
+ };
+ 
+ static char text[BUFSIZ] = "";
+@@ -53,6 +56,10 @@
+ static Drw *drw;
+ static Clr *scheme[SchemeLast];
+ 
++/* Temporary arrays to allow overriding xresources values */
++static char *colortemp[4];
++static char *tempfonts;
++
+ #include "config.h"
+ 
+ static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
+@@ -77,7 +84,7 @@
+ 	int i, n;
+ 
+ 	if (lines > 0)
+-		n = lines * bh;
++		n = lines * columns * bh;
+ 	else
+ 		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">"));
+ 	/* calculate which items will begin the next page and previous page */
+@@ -89,6 +96,15 @@
+ 			break;
+ }
+ 
++static int
++max_textw(void)
++{
++	int len = 0;
++	for (struct item *item = items; item && item->text; item++)
++		len = MAX(TEXTW(item->text), len);
++	return len;
++}
++
+ static void
+ cleanup(void)
+ {
+@@ -113,6 +129,42 @@
+ 	return NULL;
+ }
+ 
++static void
++drawhighlights(struct item *item, int x, int y, int maxw)
++{
++	char restorechar, tokens[sizeof text], *highlight,  *token;
++	int indentx, highlightlen;
++
++	drw_setscheme(drw, scheme[item == sel ? SchemeSelHighlight : SchemeNormHighlight]);
++	strcpy(tokens, text);
++	for (token = strtok(tokens, " "); token; token = strtok(NULL, " ")) {
++		highlight = fstrstr(item->text, token);
++		while (highlight) {
++			// Move item str end, calc width for highlight indent, & restore
++			highlightlen = highlight - item->text;
++			restorechar = *highlight;
++			item->text[highlightlen] = '\0';
++			indentx = TEXTW(item->text);
++			item->text[highlightlen] = restorechar;
++
++			// Move highlight str end, draw highlight, & restore
++			restorechar = highlight[strlen(token)];
++			highlight[strlen(token)] = '\0';
++			drw_text(
++				drw,
++				x + indentx - (lrpad / 2) - 1,
++				y,
++				MIN(maxw - indentx, TEXTW(highlight) - lrpad),
++				bh, 0, highlight, 0
++			);
++			highlight[strlen(token)] = restorechar;
++
++			if (strlen(highlight) - strlen(token) < strlen(token)) break;
++			highlight = fstrstr(highlight + strlen(token), token);
++		}
++	}
++}
++
+ static int
+ drawitem(struct item *item, int x, int y, int w)
+ {
+@@ -123,7 +175,9 @@
+ 	else
+ 		drw_setscheme(drw, scheme[SchemeNorm]);
+ 
+-	return drw_text(drw, x, y, w, bh, lrpad / 2, item->text, 0);
++	int r = drw_text(drw, x, y, w, bh, lrpad / 2, item->text, 0);
++	drawhighlights(item, x, y, w);
++	return r;
+ }
+ 
+ static void
+@@ -152,9 +206,15 @@
+ 	}
+ 
+ 	if (lines > 0) {
+-		/* draw vertical list */
+-		for (item = curr; item != next; item = item->right)
+-			drawitem(item, x, y += bh, mw - x);
++		/* draw grid */
++		int i = 0;
++		for (item = curr; item != next; item = item->right, i++)
++			drawitem(
++				item,
++				x + ((i / lines) *  ((mw - x) / columns)),
++				y + (((i % lines) + 1) * bh),
++				(mw - x) / columns
++			);
+ 	} else if (matches) {
+ 		/* draw horizontal list */
+ 		x += inputw;
+@@ -210,9 +270,94 @@
+ 	die("cannot grab keyboard");
+ }
+ 
++int
++compare_distance(const void *a, const void *b)
++{
++	struct item *da = *(struct item **) a;
++	struct item *db = *(struct item **) b;
++
++	if (!db)
++		return 1;
++	if (!da)
++		return -1;
++
++	return da->distance == db->distance ? 0 : da->distance < db->distance ? -1 : 1;
++}
++
++void
++fuzzymatch(void)
++{
++	/* bang - we have so much memory */
++	struct item *it;
++	struct item **fuzzymatches = NULL;
++	char c;
++	int number_of_matches = 0, i, pidx, sidx, eidx;
++	int text_len = strlen(text), itext_len;
++
++	matches = matchend = NULL;
++
++	/* walk through all items */
++	for (it = items; it && it->text; it++) {
++		if (text_len) {
++			itext_len = strlen(it->text);
++			pidx = 0; /* pointer */
++			sidx = eidx = -1; /* start of match, end of match */
++			/* walk through item text */
++			for (i = 0; i < itext_len && (c = it->text[i]); i++) {
++				/* fuzzy match pattern */
++				if (!fstrncmp(&text[pidx], &c, 1)) {
++					if(sidx == -1)
++						sidx = i;
++					pidx++;
++					if (pidx == text_len) {
++						eidx = i;
++						break;
++					}
++				}
++			}
++			/* build list of matches */
++			if (eidx != -1) {
++				/* compute distance */
++				/* add penalty if match starts late (log(sidx+2))
++				 * add penalty for long a match without many matching characters */
++				it->distance = log(sidx + 2) + (double)(eidx - sidx - text_len);
++				/* fprintf(stderr, "distance %s %f\n", it->text, it->distance); */
++				appenditem(it, &matches, &matchend);
++				number_of_matches++;
++			}
++		} else {
++			appenditem(it, &matches, &matchend);
++		}
++	}
++
++	if (number_of_matches) {
++		/* initialize array with matches */
++		if (!(fuzzymatches = realloc(fuzzymatches, number_of_matches * sizeof(struct item*))))
++			die("cannot realloc %u bytes:", number_of_matches * sizeof(struct item*));
++		for (i = 0, it = matches; it && i < number_of_matches; i++, it = it->right) {
++			fuzzymatches[i] = it;
++		}
++		/* sort matches according to distance */
++		qsort(fuzzymatches, number_of_matches, sizeof(struct item*), compare_distance);
++		/* rebuild list of matches */
++		matches = matchend = NULL;
++		for (i = 0, it = fuzzymatches[i];  i < number_of_matches && it && \
++				it->text; i++, it = fuzzymatches[i]) {
++			appenditem(it, &matches, &matchend);
++		}
++		free(fuzzymatches);
++	}
++	curr = sel = matches;
++	calcoffsets();
++}
++
+ static void
+ match(void)
+ {
++	if (fuzzy) {
++		fuzzymatch();
++		return;
++	}
+ 	static char **tokv = NULL;
+ 	static int tokn = 0;
+ 
+@@ -601,8 +746,13 @@
+ 	int a, di, n, area = 0;
+ #endif
+ 	/* init appearance */
+-	for (j = 0; j < SchemeLast; j++)
+-		scheme[j] = drw_scm_create(drw, colors[j], 2);
++	for (j = 0; j < SchemeLast; j++) {
++		scheme[j] = drw_scm_create(drw, (const char**)colors[j], 2);
++	}
++	for (j = 0; j < SchemeOut; ++j) {
++		for (i = 0; i < 2; ++i)
++			free(colors[j][i]);
++	}
+ 
+ 	clip = XInternAtom(dpy, "CLIPBOARD",   False);
+ 	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
+@@ -611,6 +761,7 @@
+ 	bh = drw->fonts->h + 2;
+ 	lines = MAX(lines, 0);
+ 	mh = (lines + 1) * bh;
++	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
+ #ifdef XINERAMA
+ 	i = 0;
+ 	if (parentwin == root && (info = XineramaQueryScreens(dpy, &n))) {
+@@ -637,9 +788,16 @@
+ 				if (INTERSECT(x, y, 1, 1, info[i]))
+ 					break;
+ 
+-		x = info[i].x_org;
+-		y = info[i].y_org + (topbar ? 0 : info[i].height - mh);
+-		mw = info[i].width;
++		if (centered) {
++			mw = MIN(MAX(max_textw() + promptw, min_width), info[i].width);
++			x = info[i].x_org + ((info[i].width  - mw) / 2);
++			y = info[i].y_org + ((info[i].height - mh) / 2);
++		} else {
++			x = info[i].x_org;
++			y = info[i].y_org + (topbar ? 0 : info[i].height - mh);
++			mw = info[i].width;
++		}
++
+ 		XFree(info);
+ 	} else
+ #endif
+@@ -647,11 +805,17 @@
+ 		if (!XGetWindowAttributes(dpy, parentwin, &wa))
+ 			die("could not get embedding window attributes: 0x%lx",
+ 			    parentwin);
+-		x = 0;
+-		y = topbar ? 0 : wa.height - mh;
+-		mw = wa.width;
++
++		if (centered) {
++			mw = MIN(MAX(max_textw() + promptw, min_width), wa.width);
++			x = (wa.width  - mw) / 2;
++			y = (wa.height - mh) / 2;
++		} else {
++			x = 0;
++			y = topbar ? 0 : wa.height - mh;
++			mw = wa.width;
++		}
+ 	}
+-	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
+ 	inputw = MIN(inputw, mw/3);
+ 	match();
+ 
+@@ -659,9 +823,11 @@
+ 	swa.override_redirect = True;
+ 	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
+ 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
+-	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, 0,
++	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
+ 	                    CopyFromParent, CopyFromParent, CopyFromParent,
+ 	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
++	if (border_width)
++		XSetWindowBorder(dpy, win, scheme[SchemeSel][ColBg].pixel);
+ 	XSetClassHint(dpy, win, &ch);
+ 
+ 
+@@ -694,6 +860,41 @@
+ 	exit(1);
+ }
+ 
++void
++readxresources(void) {
++	XrmInitialize();
++
++	char* xrm;
++	if ((xrm = XResourceManagerString(drw->dpy))) {
++		char *type;
++		XrmDatabase xdb = XrmGetStringDatabase(xrm);
++		XrmValue xval;
++
++		if (XrmGetResource(xdb, "dmenu.font", "*", &type, &xval))
++			fonts[0] = strdup(xval.addr);
++		else
++			fonts[0] = strdup(fonts[0]);
++		if (XrmGetResource(xdb, "dmenu.background", "*", &type, &xval))
++			colors[SchemeNorm][ColBg] = strdup(xval.addr);
++		else
++			colors[SchemeNorm][ColBg] = strdup(colors[SchemeNorm][ColBg]);
++		if (XrmGetResource(xdb, "dmenu.foreground", "*", &type, &xval))
++			colors[SchemeNorm][ColFg] = strdup(xval.addr);
++		else
++			colors[SchemeNorm][ColFg] = strdup(colors[SchemeNorm][ColFg]);
++		if (XrmGetResource(xdb, "dmenu.selbackground", "*", &type, &xval))
++			colors[SchemeSel][ColBg] = strdup(xval.addr);
++		else
++			colors[SchemeSel][ColBg] = strdup(colors[SchemeSel][ColBg]);
++		if (XrmGetResource(xdb, "dmenu.selforeground", "*", &type, &xval))
++			colors[SchemeSel][ColFg] = strdup(xval.addr);
++		else
++			colors[SchemeSel][ColFg] = strdup(colors[SchemeSel][ColFg]);
++
++		XrmDestroyDatabase(xdb);
++	}
++}
++
+ int
+ main(int argc, char *argv[])
+ {
+@@ -709,30 +910,40 @@
+ 			topbar = 0;
+ 		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
+ 			fast = 1;
++		else if (!strcmp(argv[i], "-F"))   /* grabs keyboard before reading stdin */
++			fuzzy = 1;
++ 		else if (!strcmp(argv[i], "-c"))   /* centers dmenu on screen */
++			centered = 1;
+ 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
+ 			fstrncmp = strncasecmp;
+ 			fstrstr = cistrstr;
+ 		} else if (i + 1 == argc)
+ 			usage();
+ 		/* these options take one argument */
+-		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
++		else if (!strcmp(argv[i], "-g")) {   /* number of columns in grid */
++			columns = atoi(argv[++i]);
++			if (lines == 0) lines = 1;
++		} else if (!strcmp(argv[i], "-l")) { /* number of lines in grid */
+ 			lines = atoi(argv[++i]);
+-		else if (!strcmp(argv[i], "-m"))
++			if (columns == 0) columns = 1;
++		} else if (!strcmp(argv[i], "-m"))
+ 			mon = atoi(argv[++i]);
+ 		else if (!strcmp(argv[i], "-p"))   /* adds prompt to left of input field */
+ 			prompt = argv[++i];
+ 		else if (!strcmp(argv[i], "-fn"))  /* font or font set */
+-			fonts[0] = argv[++i];
++			tempfonts = argv[++i];
+ 		else if (!strcmp(argv[i], "-nb"))  /* normal background color */
+-			colors[SchemeNorm][ColBg] = argv[++i];
++			colortemp[0] = argv[++i];
+ 		else if (!strcmp(argv[i], "-nf"))  /* normal foreground color */
+-			colors[SchemeNorm][ColFg] = argv[++i];
++			colortemp[1] = argv[++i];
+ 		else if (!strcmp(argv[i], "-sb"))  /* selected background color */
+-			colors[SchemeSel][ColBg] = argv[++i];
++			colortemp[2] = argv[++i];
+ 		else if (!strcmp(argv[i], "-sf"))  /* selected foreground color */
+-			colors[SchemeSel][ColFg] = argv[++i];
++			colortemp[3] = argv[++i];
+ 		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
+ 			embed = argv[++i];
++		else if (!strcmp(argv[i], "-bw"))
++			border_width = atoi(argv[++i]); /* border width */
+ 		else
+ 			usage();
+ 
+@@ -748,8 +959,23 @@
+ 		die("could not get embedding window attributes: 0x%lx",
+ 		    parentwin);
+ 	drw = drw_create(dpy, screen, root, wa.width, wa.height);
+-	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
++	readxresources();
++	/* Now we check whether to override xresources with commandline parameters */
++	if ( tempfonts )
++	   fonts[0] = strdup(tempfonts);
++	if ( colortemp[0])
++	   colors[SchemeNorm][ColBg] = strdup(colortemp[0]);
++	if ( colortemp[1])
++	   colors[SchemeNorm][ColFg] = strdup(colortemp[1]);
++	if ( colortemp[2])
++	   colors[SchemeSel][ColBg]  = strdup(colortemp[2]);
++	if ( colortemp[3])
++	   colors[SchemeSel][ColFg]  = strdup(colortemp[3]);
++
++	if (!drw_fontset_create(drw, (const char**)fonts, LENGTH(fonts)))
+ 		die("no fonts could be loaded.");
++
++	free(fonts[0]);
+ 	lrpad = drw->fonts->h;
+ 
+ #ifdef __OpenBSD__
