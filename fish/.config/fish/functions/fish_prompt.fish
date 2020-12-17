@@ -7,31 +7,34 @@ function __git_status
 
     # Set prefix for git part
     set -l git_prefix ' on '
-
-    set -l git_correct
+    
+    # Git statuses
+    set -l git_incorrect 0
+    set -l git_dirty
+    
+    # Set git remote and branch
     set -l git_remote (git remote -v | grep '(push)' | head -n1 | awk '{print $1}')
     set -l git_branch (git branch --show-current)
     set -l git_remote_branch
-    set -l git_dirty
+
+    # Color variable
     set -l git_color
 
+    # Check if git repo info is fully available
     if set -q git_remote
-        set git_correct 0
+        if test (git branch --all | grep -c 'remotes') -eq 0
+            set git_incorrect 1
+        end
     else
-        set git_correct 1
-        set git_dirty "?"
+        set git_incorrect 1
     end
 
-    if test (git branch --all | grep -c "remotes") -eq 0
-        set git_correct 1
-        set git_dirty "?"
-    end
-
-    if test $git_correct -eq 0
+    # Everything seems to be OK
+    if test $git_incorrect -eq 0
         # Verify remote branch
-        if test $git_correct -eq 0 -a (git branch --all | grep -c "remotes/$git_remote/$git_branch\$") -gt 0
+        if test (git branch --all | grep -c "remotes/$git_remote/$git_branch\$") -gt 0
             set git_remote_branch $git_branch
-        else if test $git_correct -eq 0 -a (git branch --all | grep -c "remotes/$git_remote/main\$") -gt 0
+        else if test (git branch --all | grep -c "remotes/$git_remote/main\$") -gt 0
             set git_remote_branch main
         else
             set git_remote_branch master
@@ -51,7 +54,13 @@ function __git_status
             set git_color $fish_color_user
         end
     end
-    
+
+    # Git repo is not fully correct
+    if test $git_incorrect -eq 1
+        set git_dirty "?"
+        set git_color $fish_color_user
+    end
+
     # Print git branch info
     echo -n -s (set_color normal) "$git_prefix" (set_color $git_color) "$git_branch$git_dirty" (set_color normal) 
 end
