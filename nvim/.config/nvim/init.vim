@@ -51,6 +51,9 @@ silent! call plug#begin()
     " CoC
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+    " Fish
+    Plug 'dag/vim-fish'
+
     " Git
     Plug 'tpope/vim-fugitive'
 
@@ -63,8 +66,10 @@ call plug#end()
 autocmd ColorScheme * highlight Visual cterm=reverse
 colorscheme nord
 
+" --- unix/windows ---
+set ssl
+
 " --- UI configuration ---
-set nocompatible
 filetype plugin on
 syntax on
 set number
@@ -161,20 +166,21 @@ let g:qs_lazy_highlight = 1
 
 " --- Vimwiki ---
 let wiki1 = {}
+let wiki1.auto_export = 1
 let wiki1.automatic_nested_syntaxes = 1
 let wiki1.syntax = 'markdown'
 let wiki1.ext = '.md'
 let wiki1.links_space_char = "_"
+let wiki1.custom_wiki2html = 'vimwiki-godown'
 if has('unix')
-    let wiki1.auto_export = 1
-    let wiki1.custom_wiki2html = 'vimwiki-godown'
     let wiki1.path = '~/Документы/vimwiki/wiki'
     let wiki1.path_html = '~/Документы/vimwiki/html'
     let wiki1.template_path = '~/Документы/vimwiki'
 endif
 if (has('win32') || has('win64'))
-    let wiki1.auto_export = 0
-    let wiki1.path = 'D:\git\vimwiki'
+    let wiki1.path = 'D:/git/vimwiki/wiki'
+    let wiki1.path_html = 'D:/git/vimwiki/html'
+    let wiki1.template_path = 'D:/git/vimwiki'
 endif
 let g:vimwiki_list = [wiki1]
 let g:vimwiki_global_ext = 0
