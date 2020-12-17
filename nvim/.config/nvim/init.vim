@@ -165,6 +165,7 @@ let wiki1.auto_export = 1
 let wiki1.automatic_nested_syntaxes = 1
 let wiki1.syntax = 'markdown'
 let wiki1.ext = '.md'
+let wiki1.links_space_char = "_"
 let wiki1.custom_wiki2html = 'vimwiki_markdown'
 if has('unix')
     let wiki1.path = '~/Документы/vimwiki/wiki'
@@ -178,3 +179,4 @@ if (has('win32') || has('win64'))
 endif
 let g:vimwiki_list = [wiki1]
 let g:vimwiki_global_ext = 0
+let g:vimwiki_markdown_link_ext = 1
