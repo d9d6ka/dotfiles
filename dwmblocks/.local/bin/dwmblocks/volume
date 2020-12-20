@@ -6,11 +6,11 @@ esac
 
 volstat=$(pacmd list-sinks | sed -n -e '/index/p;/base volume/d;/volume:/p;/muted:/p;/device\\.string/p')
 
-echo "$volstat" | grep -n "muted: yes" > /dev/null && printf " 婢 mute \n" && exit
+echo "$volstat" | grep -n "muted: yes" > /dev/null && printf "婢 mute\n" && exit
 
 vol=$(echo "$volstat" | grep -o "[0-9]\+%" | sed "s/[^0-9]*//g;1q")
 
-[ ! "$vol" ] && printf "  \n" && exit
+[ ! "$vol" ] && printf "\n" && exit
 
 if [ "$vol" -gt "70" ]; then
 	icon="墳"
@@ -20,4 +20,4 @@ else
 	icon="奔"
 fi
 
-printf " %s %s%% \n" "$icon" "$vol"
+printf "%s %s%%\n" "$icon" "$vol"

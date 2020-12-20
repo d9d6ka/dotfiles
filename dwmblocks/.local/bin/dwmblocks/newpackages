@@ -11,5 +11,5 @@ fi
 
 label=""
 
-printf " %s %s \n" "$label" "$packagesnew"
+printf "%s %s\n" "$label" "$packagesnew"
 

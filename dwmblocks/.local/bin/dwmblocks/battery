@@ -3,10 +3,10 @@
 function displaytime {
     local H=$(($1/60/60%24))
     local M=$(($1/60%60))
-    printf '(%02d:%02d)' $H $M
+    echo -n $H $M | awk '{printf("(%02d:%02d)", $1, $2)}'
 }
 
-[ $(cat /sys/class/power_supply/AC0/online) -ne 0 ] && printf " ﮣ"
+[ $(cat /sys/class/power_supply/AC0/online) -ne 0 ] && ac="ﮣ"
 
 for bat in /sys/class/power_supply/BAT? ; do
     capacity=$(cat "$bat"/capacity)
@@ -32,8 +32,6 @@ for bat in /sys/class/power_supply/BAT? ; do
         "Full"|"Charged") icon="" ;;
         *) icon="" ;;
     esac
-    [ "$icon" != "" ] && printf " %s" "$icon"
-    [ "$capacity" != "" ] && printf " %s%%" "$capacity"
-    [ $(cat /sys/class/power_supply/AC0/online) -eq 0 ] && printf " %s \n" $(displaytime $(($charge/$current)) ) || printf " \n"
+    echo "$ac $icon $capacity% $(displaytime $(($charge/$current)))" | sed -e 's/^ *//;s/ *$//;s/  */ /' | xargs echo -n
 done
 
