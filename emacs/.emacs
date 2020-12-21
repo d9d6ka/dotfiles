@@ -1,9 +1,12 @@
+(if (display-graphic-p)
+    (progn
+      (tool-bar-mode -1)
+      (scroll-bar-mode -1)))
+(menu-bar-mode -1)
 (setq visible-bell 1)
 (setq custom-file "~/.emacs.d/custom.el")
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
 
 ;; MELPA repository
 (require 'package)
