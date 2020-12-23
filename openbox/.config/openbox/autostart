@@ -1,5 +1,6 @@
 # Low-level X apps preferences
 xrdb -merge ~/.Xresources &
+xrdb -merge ~/.config/Xresources/Base16-Zenburn &
 
 # Mate PolKit Agent
 /usr/libexec/polkit-mate-authentication-agent-1 &
