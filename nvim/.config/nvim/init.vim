@@ -22,6 +22,7 @@ endif
 silent! call plug#begin()
     " Color scheme
     Plug 'arcticicestudio/nord-vim'
+    Plug 'chriskempson/base16-vim'
 
     " UI related
     Plug 'itchyny/lightline.vim'
@@ -64,7 +65,7 @@ call plug#end()
 " === Vim settings ===
 " --- color scheme ---
 autocmd ColorScheme * highlight Visual cterm=reverse
-colorscheme nord
+colorscheme base16-zenburn
 
 " --- unix/windows ---
 set ssl
@@ -93,7 +94,7 @@ nmap <silent> <esc><esc> :nohls<cr> :let @/=""<cr>
 " === Third-party plugins ===
 " --- Lightline ---
 let g:lightline = {
-      \ 'colorscheme': 'nord',
+      \ 'colorscheme' : 'zenburn',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
