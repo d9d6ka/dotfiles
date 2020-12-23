@@ -1,48 +1,4 @@
-! Some configs by Derek Taylor (DistroTube) were used
-!       see:    http://www.youtube.com/c/DistroTube
-!               http://www.gitlab.com/dwt1/ 
-
-!! Xft settings
-Xft.dpi: 96
-Xft.antialias: true
-Xft.hinting: true
-Xft.rgba: rgb
-Xft.autohint: true
-Xft.hintstyle: hintfull
-Xft.lcdfilter: lcdfilter
-
-!! URxvt settings
-URxvt*imLocale: ru_RU.UTF-8
-URxvt*termName: rxvt-unicode-256color
-Urxvt*buffered: false
-URxvt.intensityStyles: false
-URxvt.font: xft:FiraMono Nerd Font:size=10, xft:Monospace:style=Medium:size=10   
-URxvt.saveLines: 2000
-URxvt.scrollBar: false
-URxvt.cursorColor: white
-
-!! Extensions
-URxvt.perl-ext-common: default,resize-font,keyboard-select,clipboard
-URxvt.colorUL: #4682B4
-!! keyboard-select:
-URxvt.keysym.M-Escape: perl:keyboard-select:activate
-!! resize-font
-URxvt.resize-font.smaller: C-j
-URxvt.resize-font.bigger:  C-k
-URxvt.resize-font.step:    1
-!!clipboard
-URxvt.keysym.M-c: perl:clipboard:copy
-URxvt.keysym.M-v: perl:clipboard:paste
-URxvt*depth: 32
-
-
-!! st termname
-st.alpha: 0.95
-st.termname: st-256color
-
 !! dwm settings
-dwm.gappx: 2
-dwm.mfact: 0.5
 dwm.normbgcolor: #3B4252
 dwm.selbgcolor: #616E88
 dwm.normbordercolor: #3B4252
