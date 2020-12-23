@@ -26,6 +26,7 @@ if [ $res = "logout" ]; then
         "jwm") jwm -exit ;;
         "openbox") openbox --exit ;;
         "qtile") xdotool key Super+Shift+q ;;
+        "sowm") pkill sowm ;;
     esac
 fi
 if [ $res = "hibernate" ]; then
