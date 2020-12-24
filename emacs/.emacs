@@ -1,7 +1,7 @@
 (if (display-graphic-p)
     (progn
-		(tool-bar-mode -1)
-		(scroll-bar-mode -1)))
+        (tool-bar-mode -1)
+        (scroll-bar-mode -1)))
 (menu-bar-mode -1)
 (setq visible-bell 1)
 (setq ring-bell-function 'ignore)
@@ -16,7 +16,7 @@
 
 ;; Create package archive
 (when (not package-archive-contents)
-	(package-refresh-contents))
+    (package-refresh-contents))
 
 ;; Download use-package
 (unless (package-installed-p 'use-package) (package-install 'use-package))
@@ -25,7 +25,7 @@
 ;; Line numbers
 (setq display-line-numbers-type 'relative)
 (set-face-attribute 'line-number nil
-					:foreground "blue")
+                    :foreground "blue")
 (global-display-line-numbers-mode)
 
 ;; Dired
@@ -52,36 +52,36 @@
 
 ;; Eyecandies
 (use-package nord-theme
-	:ensure t)
+    :ensure t)
 (use-package zenburn-theme
-	:ensure t)
+    :ensure t)
 (load-theme 'zenburn t)
 
 ;; tex
 (use-package auctex
-	:defer t
-	:ensure t)
+    :defer t
+    :ensure t)
 
 ;; company-mode
 (use-package company
-	:ensure t
-	:config
-	(setq company-idle-delay 0)
-	(setq company-minimum-prefix-length 1)
-	(setq company-show-numbers t)
-	(global-company-mode t))
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 1)
+    (setq company-show-numbers t)
+    (global-company-mode t))
 
 (company-tng-configure-default)
 
 (use-package company-box
-	:ensure t
-	:after company
-	:hook (company-mode . company-box-mode))
+    :ensure t
+    :after company
+    :hook (company-mode . company-box-mode))
 
 (use-package company-jedi
-	:ensure t)
+    :ensure t)
 (defun my/python-mode-hook ()
-	(add-to-list 'company-backends 'company-jedi))
+    (add-to-list 'company-backends 'company-jedi))
 (add-hook 'python-mode-hook 'my/python-mode-hook)
 
 ;; Custom file
