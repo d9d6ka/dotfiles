@@ -17,8 +17,8 @@
 (package-initialize)
 
 ;; Create package archive
-(when (not package-archive-contents)
-    (package-refresh-contents))
+(unless package-archive-contents
+	(package-refresh-contents))
 
 ;; Download use-package
 (unless (package-installed-p 'use-package)
@@ -65,14 +65,6 @@
 	:ensure t
 	:hook (prog-mode . rainbow-delimiters-mode))
 
-;; Modeline
-(use-package all-the-icons
-    :ensure t)
-(use-package doom-modeline
-    :ensure t
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
-
 ;; Which-key
 (use-package which-key
     :ensure t
@@ -101,47 +93,37 @@
 
 ;; LSP
 (use-package lsp-mode
-    :ensure t
-    :commands (lsp lsp-deferred)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-    :config
-    (lsp-enable-which-key-integration t))
+	:ensure t
+	:commands (lsp lsp-deferred)
+	:init
+	(setq lsp-keymap-prefix "C-c l")
+	:config
+	(lsp-enable-which-key-integration t))
+
+(use-package company
+	:ensure t
+	:after lsp-mode
+	:hook (lsp-mode . company-mode)
+	:bind
+	(:map company-active-map
+		  ("<tab>" . company-complete-selection))
+	(:map lsp-mode-map
+		  ("<tab>" . company-indent-or-complete-common))
+	:custom
+	(company-minimum-prefix-length 1)
+	(company-idle-delay 0.0))
+
+(use-package company-box
+	:ensure t
+	:hook (company-mode . company-box-mode))
+
+;; Python
+(use-package python-mode
+	:hook (python-mode . lsp-deferred)
+	:custom (python-shell-interpreter "python3"))
 
 (use-package lsp-pyright
 	:ensure t
 	:hook (python-mode . (lambda ()
 							 (require 'lsp-pyright)
-							 (lsp)))) 
-(setq python-shell-interpreter "python3")
-
-;; Python-mode
-;;(use-package python-mode
-;;    :ensure t
-;;    :hook (python-mode . lsp-deferred))
-
-;; company-mode
-(use-package company
-	:after lsp-mode
-	:hook
-	(lsp-mode . company-mode)
-	:config
-	(setq company-minimum-prefix-length 1)
-	(setq company-idle-delay 0.0)
-	(global-company-mode t))
-(company-tng-configure-default)
-
-(use-package company-lsp
-	:ensure t
-	:after lsp-mode
-	:config
-	(push 'company-lsp company-backends)
-	(setq company-lsp-enable-recompletion t))
-
-(use-package company-box
-    :ensure t
-    :after company
-    :hook (company-mode . company-box-mode))
-
-;; Custom file
-(load custom-file :noerror)
+							 (lsp-deferred))))
