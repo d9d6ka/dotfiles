@@ -1,7 +1,7 @@
 (if (display-graphic-p)
-		(progn
-			(tool-bar-mode -1)
-			(scroll-bar-mode -1)))
+        (progn
+            (tool-bar-mode -1)
+            (scroll-bar-mode -1)))
 (menu-bar-mode -1)
 (setq visible-bell 1)
 (setq ring-bell-function 'ignore)
@@ -18,11 +18,11 @@
 
 ;; Create package archive
 (unless package-archive-contents
-	(package-refresh-contents))
+    (package-refresh-contents))
 
 ;; Download use-package
 (unless (package-installed-p 'use-package)
-	(package-install 'use-package))
+    (package-install 'use-package))
 (require 'use-package)
 
 ;; Evil mode
@@ -40,17 +40,21 @@
     :config
     (evil-collection-init))
 
+;; UI Settings
+;; Eyecandies
+(use-package nord-theme
+    :ensure t)
+(use-package zenburn-theme
+    :ensure t)
+(load-theme 'zenburn t)
+;;(set-face-attribute 'region nil :background "#6F6F6F")
+
 ;; Line numbers
 (setq display-line-numbers-type 'relative)
-(set-face-attribute 'line-number nil
-                    :foreground "blue")
 (global-display-line-numbers-mode)
 
-;; Dired
-(use-package dired)
-(setq dired-recursive-deletes 'top)
-
 ;; Indents
+(setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq-default c-basic-offset 4)
 (setq-default standart-indent 4)
@@ -62,8 +66,8 @@
 (electric-pair-mode 1)
 (electric-indent-mode -1)
 (use-package rainbow-delimiters
-	:ensure t
-	:hook (prog-mode . rainbow-delimiters-mode))
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Which-key
 (use-package which-key
@@ -79,12 +83,9 @@
 (defalias 'list-buffers 'ibuffer)
 (global-set-key (kbd "<f2>") 'bs-show)
 
-;; Eyecandies
-(use-package nord-theme
-    :ensure t)
-(use-package zenburn-theme
-    :ensure t)
-(load-theme 'zenburn t)
+;; Filelist (Dired)
+(use-package dired)
+(setq dired-recursive-deletes 'top)
 
 ;; tex
 (use-package auctex
@@ -93,37 +94,36 @@
 
 ;; LSP
 (use-package lsp-mode
-	:ensure t
-	:commands (lsp lsp-deferred)
-	:init
-	(setq lsp-keymap-prefix "C-c l")
-	:config
-	(lsp-enable-which-key-integration t))
+    :ensure t
+    :commands (lsp lsp-deferred)
+    :config
+    (lsp-enable-which-key-integration t)
+    (setq lsp-keymap-prefix "C-c l"))
 
 (use-package company
-	:ensure t
-	:after lsp-mode
-	:hook ((lsp-mode . company-mode)
-		   (after-init . global-company-mode))
-	:bind ((:map company-active-map
-				 ("<tab>" . company-complete-selection))
-		   (:map lsp-mode-map
-				 ("<tab>" . company-indent-or-complete-common)))
-	:custom
-	(company-minimum-prefix-length 1)
-	(company-idle-delay 0.0))
+    :ensure t
+    :after lsp-mode
+    :hook ((lsp-mode . company-mode)
+           (after-init . global-company-mode))
+    :bind ((:map company-active-map
+                 ("<tab>" . company-complete-selection))
+           (:map lsp-mode-map
+                 ("<tab>" . company-indent-or-complete-common)))
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
 
 (use-package company-box
-	:ensure t
-	:hook (company-mode . company-box-mode))
+    :ensure t
+    :hook (company-mode . company-box-mode))
 
 ;; Python
 (use-package python-mode
-	:hook (python-mode . lsp-deferred)
-	:custom (python-shell-interpreter "python3"))
+    :hook (python-mode . lsp-deferred)
+    :custom (python-shell-interpreter "python3"))
 
 (use-package lsp-pyright
-	:ensure t
-	:hook (python-mode . (lambda ()
-							 (require 'lsp-pyright)
-							 (lsp-deferred))))
+    :ensure t
+    :hook (python-mode . (lambda ()
+                             (require 'lsp-pyright)
+                             (lsp-deferred))))
