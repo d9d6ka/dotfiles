@@ -1,0 +1,246 @@
+#+title: emacs config
+#+property: header-args :tangle .emacs
+
+* Package management settings
+
+** Init built-in packages manager
+
+#+begin_src elisp
+(require 'package)
+#+end_src
+
+** Add package sources
+
+The following package sources are added
+- MELPA
+- Org-mode repo
+- Standard ELPA
+
+#+begin_src elisp
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+#+end_src
+
+** Initialize package management
+
+#+begin_src elisp
+(package-initialize)
+#+end_src
+
+Refresh archive contents on first start
+
+#+begin_src elisp
+(unless package-archive-contents
+    (package-refresh-contents))
+#+end_src
+
+** Install use-package
+
+#+begin_src elisp
+(unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+(require 'use-package)
+#+end_src
+
+* Initial setup
+
+** Switch off unused GUI elements
+
+Switch off the toolbar, the menubar and the scrollbar:
+
+#+begin_src elisp
+(if (display-graphic-p)
+        (progn
+            (tool-bar-mode -1)
+            (scroll-bar-mode -1)))
+(menu-bar-mode -1)
+(setq visible-bell 1)
+(setq ring-bell-function 'ignore)
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+#+end_src
+
+** Custom file location 
+
+#+begin_src elisp
+(setq custom-file "~/.emacs.d/custom.el")
+#+end_src
+
+** Add line numbers
+
+Display relative line numbers:
+
+#+begin_src elisp
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode)
+#+end_src
+
+** Set proper indents
+
+- use spaces instead of tabs
+- set tab width to 4
+- enable autoindent on <Enter> keypress
+
+#+begin_src elisp
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq-default c-basic-offset 4)
+(setq-default standart-indent 4)
+(setq-default lisp-body-indent 4)
+(global-set-key (kbd "RET") 'newline-and-indent)
+#+end_src
+
+** Parentheses
+
+Set automatic parentheses input:
+
+#+begin_src elisp
+(show-paren-mode t)
+(electric-pair-mode 1)
+(electric-indent-mode -1)
+#+end_src
+
+Install colored parentheses:
+
+#+begin_src elisp
+(use-package rainbow-delimiters
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+** Themes
+
+I prefer Nord and Zenburn themes
+
+#+begin_src elisp
+(use-package nord-theme
+    :ensure t)
+(use-package zenburn-theme
+    :ensure t)
+(load-theme 'zenburn t)
+#+end_src
+
+* Advanced UI settings
+
+** Evil mode
+
+Break commands at by <ESC>
+
+#+begin_src elisp
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+#+end_src
+
+Install evil mode and integrate it with various other packages
+
+#+begin_src elisp
+(use-package evil
+    :ensure t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-mode t))
+#+end_src
+
+Install evil modes addons
+
+#+begin_src elisp
+(use-package evil-collection
+    :ensure t
+    :after evil
+    :config
+    (evil-collection-init))
+#+end_src
+
+** Which-key
+
+#+begin_src elisp
+(use-package which-key
+    :ensure t
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 1))
+#+end_src
+
+** Bufferlist
+
+#+begin_src elisp
+(use-package bs)
+(use-package ibuffer)
+(defalias 'list-buffers 'ibuffer)
+(global-set-key (kbd "<f2>") 'bs-show)
+#+end_src
+
+** Filelist (Dired)
+
+#+begin_src elisp
+(use-package dired)
+(setq dired-recursive-deletes 'top)
+#+end_src
+
+* Programming
+
+** LSP
+
+Install LSP mode:
+
+#+begin_src elisp
+(use-package lsp-mode
+    :ensure t
+    :commands (lsp lsp-deferred)
+    :config
+    (lsp-enable-which-key-integration t)
+    (setq lsp-keymap-prefix "C-c l"))
+#+end_src
+
+** Company
+
+#+begin_src elisp
+(use-package company
+    :ensure t
+    :after lsp-mode
+    :hook ((lsp-mode . company-mode)
+           (after-init . global-company-mode))
+    :bind ((:map company-active-map
+                 ("<tab>" . company-complete-selection))
+           (:map lsp-mode-map
+                 ("<tab>" . company-indent-or-complete-common)))
+    :custom
+    (company-selection-wrap-around t)
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+
+(use-package company-box
+    :ensure t
+    :hook (company-mode . company-box-mode))
+#+end_src
+
+** Python
+
+*** Tweak standard Python mode
+
+#+begin_src elisp
+(use-package python-mode
+    :hook (python-mode . lsp-deferred)
+    :custom (python-shell-interpreter "python3"))
+#+end_src
+
+*** Pyright Language Server
+
+#+begin_src elisp
+(use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+                             (require 'lsp-pyright)
+                             (lsp-deferred))))
+#+end_src
+
+** TeX
+
+#+begin_src elisp
+(use-package auctex
+    :defer t
+    :ensure t)
+#+end_src
