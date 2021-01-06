@@ -29,14 +29,20 @@ run compton -b
 # NetworkManager applet
 run nm-applet
 
-# Clipboard manager
-hlt clipmenud
-run clipmenud
+# PusleAudio applet
+run volctl
+
+# PowerManager applet
+run mate-power-manager
 
 # Keyboard layouts
 run setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle
 hlt xxkb
 run xxkb
+
+# Clipboard manager
+hlt clipmenud
+run clipmenud
 
 # Wallpaper
 run nitrogen --random --set-zoom-fill ~/.local/share/wallpapers
