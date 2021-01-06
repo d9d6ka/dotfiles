@@ -1,3 +1,6 @@
+# No greeting
+set fish_greeting
+
 # set EDITOR
 set -x EDITOR nvim
 
