@@ -80,23 +80,19 @@
     :config
     (setq which-key-idle-delay 1))
 
-(use-package bs)
-(use-package ibuffer)
-(defalias 'list-buffers 'ibuffer)
-(global-set-key (kbd "<f2>") 'bs-show)
-
 (use-package dired)
 (setq dired-recursive-deletes 'top)
 
 (use-package ivy
-
+    :ensure t
     :diminish
-    :bind (("C-s" . swiper)
+    :bind (("<f2>" . ivy-switch-buffer)
+        ("C-s" . swiper)
         :map ivy-minibuffer-map
-        ("TAB" . ivy-alt-done)
         ("C-l" . ivy-alt-done)
         ("C-j" . ivy-next-line)
         ("C-k" . ivy-previous-line)
+        ("TAB" . ivy-next-line)
         :map ivy-switch-buffer-map
         ("C-k" . ivy-previous-line)
         ("C-l" . ivy-done)
@@ -106,6 +102,43 @@
         ("C-d" . ivy-reverse-i-search-kill))
     :config
     (ivy-mode 1))
+
+(use-package ivy-posframe
+    :ensure t
+    :config
+    (setq ivy-posframe-display-functions-alist
+        '((swiper                     . ivy-posframe-display-at-point)
+          (complete-symbol            . ivy-posframe-display-at-point)
+          (counsel-M-x                . ivy-display-function-fallback)
+          (counsel-esh-history        . ivy-posframe-display-at-window-center)
+          (counsel-describe-function  . ivy-display-function-fallback)
+          (counsel-describe-variable  . ivy-display-function-fallback)
+          (counsel-find-file          . ivy-display-function-fallback)
+          (counsel-recentf            . ivy-display-function-fallback)
+          (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
+          (ivy-switch-buffer          . ivy-posframe-display-at-window-center)
+          (nil                        . ivy-posframe-display)))
+    (ivy-posframe-mode 1))
+
+(use-package swiper
+    :ensure t
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (global-set-key "\C-s" 'swiper)
+    (global-set-key (kbd "C-c C-r") 'ivy-resume)
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file))
+
+(use-package counsel
+    :ensure t
+    :bind (("C-M-j" . 'counsel-switch-buffer)
+        :map minibuffer-local-map
+        ("C-r" . 'counsel-minibuffer-history))
+    :custom
+    (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+    :config
+    (counsel-mode 1))
 
 (use-package lsp-mode
     :ensure t
