@@ -45,6 +45,28 @@ Refresh archive contents on first start
 
 * Initial setup
 
+** Keeping folders clean
+
+Keep ~.emacs.d~ clean:
+
+#+begin_src elisp
+(setq user-emacs-directory "~/.cache/emacs")
+#+end_src
+
+Install ~no-littering~ for automatic tmp files handling:
+
+#+begin_src elisp
+(use-package no-littering
+    :ensure t)
+#+end_src
+
+Transform autosave filenames:
+
+#+begin_src elisp
+(setq auto-save-file-name-transforms
+    `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+#+end_src
+
 ** Switch off unused GUI elements
 
 Switch off the toolbar, the menubar and the scrollbar:
@@ -178,6 +200,31 @@ Install evil modes addons
 #+begin_src elisp
 (use-package dired)
 (setq dired-recursive-deletes 'top)
+#+end_src
+
+** Ivy
+
+Use ~ivy-mode~ for nicer selection menus:
+
+#+begin_src elisp
+(use-package ivy
+
+    :diminish
+    :bind (("C-s" . swiper)
+        :map ivy-minibuffer-map
+        ("TAB" . ivy-alt-done)
+        ("C-l" . ivy-alt-done)
+        ("C-j" . ivy-next-line)
+        ("C-k" . ivy-previous-line)
+        :map ivy-switch-buffer-map
+        ("C-k" . ivy-previous-line)
+        ("C-l" . ivy-done)
+        ("C-d" . ivy-switch-buffer-kill)
+        :map ivy-reverse-i-search-map
+        ("C-k" . ivy-previous-line)
+        ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
 #+end_src
 
 * Programming
