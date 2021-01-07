@@ -1,336 +1,353 @@
 #+title: emacs config
 #+property: header-args :tangle .emacs
 
-* Package management settings
+* Настройки менеджера пакетов
 
-** Init built-in packages manager
+** Запуск встроенного менеджера пакетов
+
+Для начала необходимо запустить менеджер пакетов, встроенный в Emacs:
 
 #+begin_src elisp
-(require 'package)
+  (require 'package)
 #+end_src
 
-** Add package sources
+** Добавление сторонних репозиториев
 
-The following package sources are added
-- MELPA
-- Org-mode repo
-- Standard ELPA
+В список источников пакетов включены следующие репозитории:
+- MELPA -- репозиторий, нацеленный на автоматическую сюорку пакетов для Emacs
+- Org-mode -- репозиторий новых версий org-mode
+- Standard ELPA -- стандартный репозиторий Emacs
 
 #+begin_src elisp
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
 #+end_src
 
-** Initialize package management
+** Инициализация пакетного менеджера
 
 #+begin_src elisp
-(package-initialize)
+  (package-initialize)
 #+end_src
 
-Refresh archive contents on first start
+Создание списка пакетов в случае его отсутствия
 
 #+begin_src elisp
-(unless package-archive-contents
-    (package-refresh-contents))
+  (unless package-archive-contents
+      (package-refresh-contents))
 #+end_src
 
-** Install use-package
+** Установка ~use-package~
+
+~use-package~ предоставляет удобный способ автоматической устновки, запуска и настройки пакетов.
 
 #+begin_src elisp
-(unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-(require 'use-package)
+  (unless (package-installed-p 'use-package)
+      (package-install 'use-package))
+  (require 'use-package)
 #+end_src
 
 * Initial setup
 
-** Keeping folders clean
+** Избавляемся от мусора в директории с конфигурационными файлами
 
-Keep ~.emacs.d~ clean:
-
-#+begin_src elisp
-(setq user-emacs-directory "~/.cache/emacs")
-#+end_src
-
-Install ~no-littering~ for automatic tmp files handling:
+Переносим максимум настроек из директории ~.emacs.d~:
 
 #+begin_src elisp
-(use-package no-littering
-    :ensure t)
+  (setq user-emacs-directory "~/.cache/emacs")
 #+end_src
 
-Transform autosave filenames:
+Установка пакета ~no-littering~ для автоматической сборки мусора:
 
 #+begin_src elisp
-(setq auto-save-file-name-transforms
-    `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+  (use-package no-littering
+      :ensure t)
 #+end_src
 
-** Switch off unused GUI elements
-
-Switch off the toolbar, the menubar and the scrollbar:
+Переносим автоматические сохранения в отдельную директорию:
 
 #+begin_src elisp
-(if (display-graphic-p)
-        (progn
-            (tool-bar-mode -1)
-            (scroll-bar-mode -1)))
-(menu-bar-mode -1)
-(setq visible-bell 1)
-(setq ring-bell-function 'ignore)
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
+  (setq auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 #+end_src
 
-** Custom file location 
+** Убираем ненужные элементы интерфейса
+
+Отключаем меню, панель инструментов, полосу прокрутки, начальный экран:
 
 #+begin_src elisp
-(setq custom-file "~/.emacs.d/custom.el")
+  (if (display-graphic-p)
+          (progn
+              (tool-bar-mode -1)
+              (scroll-bar-mode -1)))
+  (menu-bar-mode -1)
+  (setq visible-bell 1)
+  (setq ring-bell-function 'ignore)
+  (setq inhibit-splash-screen t)
+  (setq inhibit-startup-message t)
 #+end_src
 
-** Add line numbers
-
-Display relative line numbers:
+** Задаем расположение файла с персональными настройками
 
 #+begin_src elisp
-(setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode)
+  (setq custom-file "~/.emacs.d/custom.el")
 #+end_src
 
-** Set proper indents
+** Нумерация строк
 
-- use spaces instead of tabs
-- set tab width to 4
-- enable autoindent on <Enter> keypress
+Добавляем относительную нумерацию строк в буферах:
 
 #+begin_src elisp
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(setq-default c-basic-offset 4)
-(setq-default standart-indent 4)
-(setq-default lisp-body-indent 4)
-(global-set-key (kbd "RET") 'newline-and-indent)
+  (setq display-line-numbers-type 'relative)
+  (global-display-line-numbers-mode)
 #+end_src
 
-** Parentheses
+** Настройки отступов
 
-Set automatic parentheses input:
+- используем пробелы вместо табуляции 
+- задаем стандартую ширину отступа, равную 4 пробелам
+- автоматические отступы при нажатии ~Enter~
 
 #+begin_src elisp
-(show-paren-mode t)
-(electric-pair-mode 1)
-(electric-indent-mode -1)
+  (setq-default indent-tabs-mode nil)
+  (setq-default tab-width 4)
+  (setq-default c-basic-offset 4)
+  (setq-default standart-indent 4)
+  (setq-default lisp-body-indent 4)
+  (global-set-key (kbd "RET") 'newline-and-indent)
 #+end_src
 
-Install colored parentheses:
+** Скобки
+
+Автоматическая расстановка закрывающих скобок:
 
 #+begin_src elisp
-(use-package rainbow-delimiters
-    :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode))
+  (show-paren-mode t)
+  (electric-pair-mode 1)
+  (electric-indent-mode -1)
 #+end_src
 
-** Themes
-
-I prefer Nord and Zenburn themes
+Разноцветная подсветка парных скобок:
 
 #+begin_src elisp
-(use-package nord-theme
-    :ensure t)
-(use-package zenburn-theme
-    :ensure t)
-(load-theme 'zenburn t)
+  (use-package rainbow-delimiters
+      :ensure t
+      :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
-* Advanced UI settings
+** Темы
+
+Я предпочитаю использовать темы Nord и Zenburn. На текущий момент предпочтение на стороне темы Zenburn.
+
+#+begin_src elisp
+  (use-package nord-theme
+      :ensure t)
+  (use-package zenburn-theme
+      :ensure t)
+  (load-theme 'zenburn t)
+#+end_src
+
+* Продвинутые настройки интерфейса
 
 ** Evil mode
 
-Break commands at by <ESC>
+Прерывание команд по нажатию ~ESC~
 
 #+begin_src elisp
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+end_src
 
-Install evil mode and integrate it with various other packages
+Установка пакета ~evil~ и его автоматическая интеграция с рядом других пакетов:
 
 #+begin_src elisp
-(use-package evil
-    :ensure t
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    :config
-    (evil-mode t))
+  (use-package evil
+      :ensure t
+      :init
+      (setq evil-want-integration t)
+      (setq evil-want-keybinding nil)
+      :config
+      (evil-mode t))
 #+end_src
 
-Install evil modes addons
+Установка дополнительных возможностей ~evil~:
 
 #+begin_src elisp
-(use-package evil-collection
-    :ensure t
-    :after evil
-    :config
-    (evil-collection-init))
+  (use-package evil-collection
+      :ensure t
+      :after evil
+      :config
+      (evil-collection-init))
 #+end_src
 
 ** Which-key
 
-Nice mode for showing keybindings:
+Простой, но эффективный пакет для подсказок комбинаций клавиш:
 
 #+begin_src elisp
-(use-package which-key
-    :ensure t
-    :init (which-key-mode)
-    :diminish which-key-mode
-    :config
-    (setq which-key-idle-delay 1))
+  (use-package which-key
+      :ensure t
+      :init (which-key-mode)
+      :diminish which-key-mode
+      :config
+      (setq which-key-idle-delay 1))
 #+end_src
 
-** Filelist (Dired)
+** Файловый менеджер (Dired)
 
 #+begin_src elisp
-(use-package dired)
-(setq dired-recursive-deletes 'top)
+  (use-package dired)
+  (setq dired-recursive-deletes 'top)
 #+end_src
 
 ** Ivy
 
-Use ~ivy-mode~ for nicer selection menus:
+~ivy-mode~ -- пакет, предоставляющий автодополнение в служебных буферах (~M-x~ и прочих):
 
 #+begin_src elisp
-(use-package ivy
-    :ensure t
-    :diminish
-    :bind (("<f2>" . ivy-switch-buffer)
-        ("C-s" . swiper)
-        :map ivy-minibuffer-map
-        ("C-l" . ivy-alt-done)
-        ("C-j" . ivy-next-line)
-        ("C-k" . ivy-previous-line)
-        ("TAB" . ivy-next-line)
-        :map ivy-switch-buffer-map
-        ("C-k" . ivy-previous-line)
-        ("C-l" . ivy-done)
-        ("C-d" . ivy-switch-buffer-kill)
-        :map ivy-reverse-i-search-map
-        ("C-k" . ivy-previous-line)
-        ("C-d" . ivy-reverse-i-search-kill))
-    :config
-    (ivy-mode 1))
+  (use-package ivy
+      :ensure t
+      :diminish
+      :bind (("<f2>" . ivy-switch-buffer)
+             ("C-s" . swiper)
+             :map ivy-minibuffer-map
+             ("C-l" . ivy-alt-done)
+             ("C-j" . ivy-next-line)
+             ("C-k" . ivy-previous-line)
+             ("TAB" . ivy-next-line)
+             :map ivy-switch-buffer-map
+             ("C-k" . ivy-previous-line)
+             ("C-l" . ivy-done)
+             ("C-d" . ivy-switch-buffer-kill)
+             :map ivy-reverse-i-search-map
+             ("C-k" . ivy-previous-line)
+             ("C-d" . ivy-reverse-i-search-kill))
+      :config
+      (ivy-mode 1))
 #+end_src
 
-Display ~ivy~ in nicer window:
+Показ ~ivy~ в отдельных окошках:
 
 #+begin_src elisp
-(use-package ivy-posframe
-    :ensure t
-    :config
-    (setq ivy-posframe-display-functions-alist
-        '((swiper                     . ivy-posframe-display-at-point)
-          (complete-symbol            . ivy-posframe-display-at-point)
-          (counsel-M-x                . ivy-display-function-fallback)
-          (counsel-esh-history        . ivy-posframe-display-at-window-center)
-          (counsel-describe-function  . ivy-display-function-fallback)
-          (counsel-describe-variable  . ivy-display-function-fallback)
-          (counsel-find-file          . ivy-display-function-fallback)
-          (counsel-recentf            . ivy-display-function-fallback)
-          (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
-          (ivy-switch-buffer          . ivy-posframe-display-at-window-center)
-          (nil                        . ivy-posframe-display)))
-    (ivy-posframe-mode 1))
+  (use-package ivy-posframe
+      :ensure t
+      :config
+      (setq ivy-posframe-display-functions-alist
+            '((swiper                     . ivy-posframe-display-at-point)
+              (complete-symbol            . ivy-posframe-display-at-point)
+              (counsel-M-x                . ivy-display-function-fallback)
+              (counsel-esh-history        . ivy-posframe-display-at-window-center)
+              (counsel-describe-function  . ivy-display-function-fallback)
+              (counsel-describe-variable  . ivy-display-function-fallback)
+              (counsel-find-file          . ivy-display-function-fallback)
+              (counsel-recentf            . ivy-display-function-fallback)
+              (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
+              (ivy-switch-buffer          . ivy-posframe-display-at-window-center)
+              (nil                        . ivy-posframe-display)))
+      (ivy-posframe-mode 1))
 #+end_src
 
-Use ~swiper~ for better searching:
+Установка ~swiper~ для более продвинутого поиска в ~ivy~:
 
 #+begin_src elisp
-(use-package swiper
-    :ensure t
-    :config
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t)
-    (global-set-key "\C-s" 'swiper)
-    (global-set-key (kbd "C-c C-r") 'ivy-resume)
-    (global-set-key (kbd "M-x") 'counsel-M-x)
-    (global-set-key (kbd "C-x C-f") 'counsel-find-file))
+  (use-package swiper
+      :ensure t
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (global-set-key "\C-s" 'swiper)
+      (global-set-key (kbd "C-c C-r") 'ivy-resume)
+      (global-set-key (kbd "M-x") 'counsel-M-x)
+      (global-set-key (kbd "C-x C-f") 'counsel-find-file))
 #+end_src
 
-Use ~counsel~:
+Установка ~counsel~ для расширения возможностей ~ivy~. Заменяет некоторые стандартные функции Emacs для наилучшей интеграции с ~ivy~:
 
 #+begin_src elisp
-(use-package counsel
-    :ensure t
-    :bind (("C-M-j" . 'counsel-switch-buffer)
-        :map minibuffer-local-map
-        ("C-r" . 'counsel-minibuffer-history))
-    :custom
-    (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-    :config
-    (counsel-mode 1))
+  (use-package counsel
+      :ensure t
+      :bind (("C-M-j" . 'counsel-switch-buffer)
+             :map minibuffer-local-map
+             ("C-r" . 'counsel-minibuffer-history))
+      :custom
+      (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+      :config
+      (counsel-mode 1))
 #+end_src
 
-* Programming
+* Программирование
+
+** Org-mode
+
+Установка ~Polymode~ для более качественной поддержки блоков с кодом в ~org-mode~:
+
+#+begin_src elisp
+  (use-package polymode
+      :ensure t)
+  (use-package poly-org
+      :ensure t)
+#+end_src
 
 ** LSP
 
-Install LSP mode:
+Установка LSP для работы с серверами языков программирования:
 
 #+begin_src elisp
-(use-package lsp-mode
-    :ensure t
-    :commands (lsp lsp-deferred)
-    :config
-    (lsp-enable-which-key-integration t)
-    (setq lsp-keymap-prefix "C-c l"))
+  (use-package lsp-mode
+      :ensure t
+      :commands (lsp lsp-deferred)
+      :config
+      (lsp-enable-which-key-integration t)
+      (setq lsp-keymap-prefix "C-c l"))
 #+end_src
 
 ** Company
 
-#+begin_src elisp
-(use-package company
-    :ensure t
-    :after lsp-mode
-    :hook ((lsp-mode . company-mode)
-           (after-init . global-company-mode))
-    :bind ((:map company-active-map
-                 ("<tab>" . company-complete-selection))
-           (:map lsp-mode-map
-                 ("<tab>" . company-indent-or-complete-common)))
-    :custom
-    (company-selection-wrap-around t)
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+Пакет для автодополнения в режиме LSP:
 
-(use-package company-box
-    :ensure t
-    :hook (company-mode . company-box-mode))
+#+begin_src elisp
+  (use-package company
+      :ensure t
+      :after lsp-mode
+      :hook ((lsp-mode . company-mode)
+             (after-init . global-company-mode))
+      :bind ((:map company-active-map
+                   ("<tab>" . company-complete-selection))
+             (:map lsp-mode-map
+                 ("<tab>" . company-indent-or-complete-common)))
+      :custom
+      (company-selection-wrap-around t)
+      (company-minimum-prefix-length 1)
+      (company-idle-delay 0.0))
+  
+  (use-package company-box
+      :ensure t
+      :hook (company-mode . company-box-mode))
 #+end_src
 
 ** Python
 
-*** Tweak standard Python mode
+*** Некоторые настройки стандартного режима Python:
 
 #+begin_src elisp
-(use-package python-mode
-    :hook (python-mode . lsp-deferred)
-    :custom (python-shell-interpreter "python3"))
+  (use-package python-mode
+      :hook (python-mode . lsp-deferred)
+      :custom (python-shell-interpreter "python3"))
 #+end_src
 
-*** Pyright Language Server
+*** Сервер Pyright
 
 #+begin_src elisp
-(use-package lsp-pyright
-    :ensure t
-    :hook (python-mode . (lambda ()
-                             (require 'lsp-pyright)
-                             (lsp-deferred))))
+  (use-package lsp-pyright
+      :ensure t
+      :hook (python-mode . (lambda ()
+                               (require 'lsp-pyright)
+                               (lsp-deferred))))
 #+end_src
 
 ** TeX
 
 #+begin_src elisp
-(use-package auctex
-    :defer t
-    :ensure t)
+  (use-package auctex
+      :defer t
+      :ensure t)
 #+end_src

@@ -19,7 +19,7 @@
     :ensure t)
 
 (setq auto-save-file-name-transforms
-    `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
 (if (display-graphic-p)
         (progn
@@ -87,19 +87,19 @@
     :ensure t
     :diminish
     :bind (("<f2>" . ivy-switch-buffer)
-        ("C-s" . swiper)
-        :map ivy-minibuffer-map
-        ("C-l" . ivy-alt-done)
-        ("C-j" . ivy-next-line)
-        ("C-k" . ivy-previous-line)
-        ("TAB" . ivy-next-line)
-        :map ivy-switch-buffer-map
-        ("C-k" . ivy-previous-line)
-        ("C-l" . ivy-done)
-        ("C-d" . ivy-switch-buffer-kill)
-        :map ivy-reverse-i-search-map
-        ("C-k" . ivy-previous-line)
-        ("C-d" . ivy-reverse-i-search-kill))
+           ("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("C-l" . ivy-alt-done)
+           ("C-j" . ivy-next-line)
+           ("C-k" . ivy-previous-line)
+           ("TAB" . ivy-next-line)
+           :map ivy-switch-buffer-map
+           ("C-k" . ivy-previous-line)
+           ("C-l" . ivy-done)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-k" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
     :config
     (ivy-mode 1))
 
@@ -107,17 +107,17 @@
     :ensure t
     :config
     (setq ivy-posframe-display-functions-alist
-        '((swiper                     . ivy-posframe-display-at-point)
-          (complete-symbol            . ivy-posframe-display-at-point)
-          (counsel-M-x                . ivy-display-function-fallback)
-          (counsel-esh-history        . ivy-posframe-display-at-window-center)
-          (counsel-describe-function  . ivy-display-function-fallback)
-          (counsel-describe-variable  . ivy-display-function-fallback)
-          (counsel-find-file          . ivy-display-function-fallback)
-          (counsel-recentf            . ivy-display-function-fallback)
-          (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
-          (ivy-switch-buffer          . ivy-posframe-display-at-window-center)
-          (nil                        . ivy-posframe-display)))
+          '((swiper                     . ivy-posframe-display-at-point)
+            (complete-symbol            . ivy-posframe-display-at-point)
+            (counsel-M-x                . ivy-display-function-fallback)
+            (counsel-esh-history        . ivy-posframe-display-at-window-center)
+            (counsel-describe-function  . ivy-display-function-fallback)
+            (counsel-describe-variable  . ivy-display-function-fallback)
+            (counsel-find-file          . ivy-display-function-fallback)
+            (counsel-recentf            . ivy-display-function-fallback)
+            (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
+            (ivy-switch-buffer          . ivy-posframe-display-at-window-center)
+            (nil                        . ivy-posframe-display)))
     (ivy-posframe-mode 1))
 
 (use-package swiper
@@ -133,12 +133,17 @@
 (use-package counsel
     :ensure t
     :bind (("C-M-j" . 'counsel-switch-buffer)
-        :map minibuffer-local-map
-        ("C-r" . 'counsel-minibuffer-history))
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history))
     :custom
     (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
     :config
     (counsel-mode 1))
+
+(use-package polymode
+    :ensure t)
+(use-package poly-org
+    :ensure t)
 
 (use-package lsp-mode
     :ensure t
@@ -155,7 +160,7 @@
     :bind ((:map company-active-map
                  ("<tab>" . company-complete-selection))
            (:map lsp-mode-map
-                 ("<tab>" . company-indent-or-complete-common)))
+               ("<tab>" . company-indent-or-complete-common)))
     :custom
     (company-selection-wrap-around t)
     (company-minimum-prefix-length 1)
