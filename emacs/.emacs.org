@@ -47,7 +47,7 @@
   (require 'use-package)
 #+end_src
 
-* Initial setup
+* Первоначальные настройки
 
 ** Избавляемся от мусора в директории с конфигурационными файлами
 
@@ -147,11 +147,17 @@
   (load-theme 'zenburn t)
 #+end_src
 
+** Перенос длинных строк
+
+#+begin_src elisp
+  (global-visual-line-mode 1)
+#+end_src
+
 * Продвинутые настройки интерфейса
 
 ** Evil mode
 
-Прерывание команд по нажатию ~ESC~
+Прерывание команд по нажатию ~ESC~:
 
 #+begin_src elisp
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -179,9 +185,18 @@
       (evil-collection-init))
 #+end_src
 
+Использование ~undo-tree~ в качестве системы отмены/повтора. На текущий момент ~evil~ не назначает никакого стандартного варианта:
+
+#+begin_src elisp
+  (use-package undo-tree
+      :ensure t)
+  (global-undo-tree-mode)
+  (evil-set-undo-system 'undo-tree)
+#+end_src
+
 ** Which-key
 
-Простой, но эффективный пакет для подсказок комбинаций клавиш:
+Простой, но эффективный пакет для подсказок комбинаций клавиш. Достаточно начать ввод комбинации -- и появится минибуфер с вариантами завершения.
 
 #+begin_src elisp
   (use-package which-key
@@ -193,7 +208,7 @@
 #+end_src
 
 ** Файловый менеджер (Dired)
-
+   
 #+begin_src elisp
   (use-package dired)
   (setq dired-recursive-deletes 'top)
@@ -201,7 +216,7 @@
 
 ** Ivy
 
-~ivy-mode~ -- пакет, предоставляющий автодополнение в служебных буферах (~M-x~ и прочих):
+~ivy-mode~ -- пакет, предоставляющий автодополнение в различных ситуациях (~M-x~ и прочих):
 
 #+begin_src elisp
   (use-package ivy
@@ -351,3 +366,8 @@
       :defer t
       :ensure t)
 #+end_src
+
+# Local Variables:
+# eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Reload?")(load-file user-init-file))) nil t)
+# eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t) 
+# End:

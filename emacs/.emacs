@@ -57,6 +57,8 @@
     :ensure t)
 (load-theme 'zenburn t)
 
+(global-visual-line-mode 1)
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package evil
@@ -72,6 +74,11 @@
     :after evil
     :config
     (evil-collection-init))
+
+(use-package undo-tree
+    :ensure t)
+(global-undo-tree-mode)
+(evil-set-undo-system 'undo-tree)
 
 (use-package which-key
     :ensure t
