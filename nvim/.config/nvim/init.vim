@@ -65,7 +65,7 @@ call plug#end()
 " === Vim settings ===
 " --- color scheme ---
 autocmd ColorScheme * highlight Visual cterm=reverse
-colorscheme base16-zenburn
+colorscheme nord
 
 " --- unix/windows ---
 set ssl
@@ -94,7 +94,7 @@ nmap <silent> <esc><esc> :nohls<cr> :let @/=""<cr>
 " === Third-party plugins ===
 " --- Lightline ---
 let g:lightline = {
-      \ 'colorscheme' : 'zenburn',
+      \ 'colorscheme' : 'nord',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]

@@ -19,7 +19,7 @@ run sxhkd
 
 # Low-level X apps preferences
 run xrdb -merge ~/.Xresources
-run xrdb -merge ~/.config/Xresources/Base16-Zenburn
+run xrdb -merge ~/.config/Xresources/Nord
 
 # Mate Polkit Agent
 run /usr/libexec/polkit-mate-authentication-agent-1
