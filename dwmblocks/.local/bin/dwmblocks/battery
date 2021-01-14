@@ -6,10 +6,12 @@ function displaytime {
     echo -n $H $M | awk '{printf("(%02d:%02d)", $1, $2)}'
 }
 
+totalcap=0
 [ $(cat /sys/class/power_supply/AC0/online) -ne 0 ] && ac="ﮣ"
 
 for bat in /sys/class/power_supply/BAT? ; do
     capacity=$(cat "$bat"/capacity)
+    totalcap=$((${totalcap} + ${capacity}))
     charge=$(( $(cat "$bat"/charge_now) * 3600 ))
     current=$(cat "$bat"/current_now)
     bstatus=$(cat "$bat"/status)
@@ -34,4 +36,7 @@ for bat in /sys/class/power_supply/BAT? ; do
     esac
     echo "$ac $icon $capacity% $(displaytime $(($charge/$current)))" | sed -e 's/^ *//;s/ *$//;s/  */ /' | xargs echo -n
 done
+
+[ $totalcap -le 1 ] && [ ! -f ~/.cache/battery_urgent ] && touch ~/.cache/battery_urgent && sudo ZZZ
+[ $totalcap -gt 1 ] && [ -f ~/.cache/battery_urgent ] && rm ~/.cache/battery_urgent
 
