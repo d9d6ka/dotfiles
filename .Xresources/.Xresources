@@ -47,5 +47,5 @@ dwm.mfact: 0.5
 Xautolock.time: 10
 Xautolock.killtime: 20
 Xautolock.locker: i3lock-fancy
-Xautlock.killer: sudo zzz
+Xautolock.killer: sudo zzz
 
