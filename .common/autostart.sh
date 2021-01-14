@@ -49,5 +49,5 @@ run nitrogen --random --set-zoom-fill ~/.local/share/wallpapers
 run pcmanfm -d
 
 # Statusbar
-run dwmblocks
+[ "$DESKTOP_SESSION" = "dwm" ] && run dwmblocks
 
