@@ -1,5 +1,11 @@
 export $(dbus-launch)
 export PATH=$PATH:$(du ~/.local/bin | cut -f2 | cut -d/ -f1-6 | sort -u | tr '\n' ':' | sed 's/:*$//'):~/go/bin:~/.cabal/bin
+export BATTERY_ALERT=5
+export BATTERY_SLEEP=1
+export IDLE_LOCK=10
+export IDLE_LOCKER='i3lock-fancy -n'
+export IDLE_KILL=20
+export IDLE_KILLER='sudo zzz'
 export TERMINAL=alacritty
 export EDITOR=nvim
 export CM_LAUNCHER=rofi
