@@ -7,7 +7,8 @@ function displaytime {
 }
 
 totalcap=0
-[ $(cat /sys/class/power_supply/AC0/online) -ne 0 ] && ac="ﮣ"
+ac_status=$(cat /sys/class/power_supply/AC0/online)
+[ $ac_status -ne 0 ] && ac="ﮣ"
 
 for bat in /sys/class/power_supply/BAT? ; do
     capacity=$(cat "$bat"/capacity)
@@ -37,6 +38,19 @@ for bat in /sys/class/power_supply/BAT? ; do
     echo "$ac $icon $capacity% $(displaytime $(($charge/$current)))" | sed -e 's/^ *//;s/ *$//;s/  */ /' | xargs echo -n
 done
 
-[ $totalcap -le 1 ] && [ ! -f ~/.cache/battery_urgent ] && touch ~/.cache/battery_urgent && sudo ZZZ
-[ $totalcap -gt 1 ] && [ -f ~/.cache/battery_urgent ] && rm ~/.cache/battery_urgent
-
+if [ $ac_status -eq 0 ]; then
+    if [ $totalcap -le ${BATTERY_ALERT:-6} ]; then
+        [ ! -f ~/.cache/battery_alert ] && \
+            echo -n $totalcap > ~/.cache/battery_alert
+        [ $(cat ~/.cache/battery_alert) -ne $totalcap ] && \
+            notify-send -u critical "Battery low!" && \
+            echo -n $totalcap > ~/.cache/battery_alert
+    else
+        [ -f ~/.cache/battery_alert ] && rm ~/.cache/battery_alert
+    fi
+    [ $totalcap -le ${BATTERY_SLEEP:-1} ] && i3lock-fancy && sudo ZZZ
+fi
+if [ $ac_status -ne 0 ]; then
+    [ -f ~/.cache/battery_alert ] && \
+        rm ~/.cache/battery_alert
+fi
