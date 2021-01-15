@@ -1,9 +1,9 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 run () {
     pgrep -f $(basename -- $1)
     if [ $? -eq 1 ]; then
-        $@ &
+        "$@" &
     fi
 }
 
@@ -30,8 +30,8 @@ run compton -b
 run nm-applet
 
 # PowerManager applet
-#run mate-power-manager
-run xautolock -detectsleep
+hlt xautolock
+run xautolock -detectsleep -time ${IDLE_LOCK:-10} -locker "${IDLE_LOCKER:-i3lock-fancy -n}" -killtime ${IDLE_KILL:-20} -killer "${IDLE_KILLER:-sudo zzz}"
 
 # Keyboard layouts
 run setxkbmap -layout us,ru -variant -option grp:alt_shift_toggle
