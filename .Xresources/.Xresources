@@ -43,9 +43,3 @@ st.termname: st-256color
 dwm.gappx: 2
 dwm.mfact: 0.5
 
-!! xautolock settings
-Xautolock.time: 10
-Xautolock.killtime: 20
-Xautolock.locker: i3lock-fancy
-Xautolock.killer: sudo zzz
-
