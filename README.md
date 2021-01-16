@@ -1,5 +1,9 @@
 # Void Linux
 
+- Openbox Arc themes (c) @dglava under GNU GPL v3.0
+- Openbox Shiki themes from @vloup
+- Icewm Arc Dark theme (c) @Aethusx
+
 ## Stow Script
 
 To stow config files use `dotstow` script.
