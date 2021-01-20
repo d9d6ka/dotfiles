@@ -1,6 +1,9 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-function displaytime {
+which systemctl > /dev/null 2>&1
+sysd=$?
+
+displaytime() {
     local H=$(($1/60/60%24))
     local M=$(($1/60%60))
     echo -n $H $M | awk '{printf("(%02d:%02d)", $1, $2)}'
@@ -48,7 +51,10 @@ if [ $ac_status -eq 0 ]; then
     else
         [ -f /tmp/battery_alert ] && rm /tmp/battery_alert
     fi
-    [ $totalcap -le ${BATTERY_SLEEP:-1} ] && i3lock-fancy && sudo ZZZ
+    if [ $totalcap -le ${BATTERY_SLEEP:-1} ]; then
+        i3lock-fancy
+        [ ! $sysd -eq 0 ] && sudo ZZZ || systemctl hibernate
+    fi
 fi
 if [ $ac_status -ne 0 ]; then
     [ -f /tmp/battery_alert ] && \

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 getweather() {
     ping -q -c 1 ya.ru > /dev/null || exit 1

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 if [ $(uname -a | grep -i -c 'debian') -gt 0 ]; then
 	apt update 2>& /dev/null
