@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+which systemctl
+sysd=$?
+
 case ${POWERMENU_LAUNCHER:-dmenu} in
     rofi) res=$(cat "$HOME/.local/share/powermenu" | xargs -0 echo -en | rofi -dmenu -l 6 -p "Choose:" -show-icons) ;;
     *)    res=$(cat "$HOME/.local/share/powermenu" | xargs -0 echo -en | dmenu -i -F -c -g 1 -bw 2 -l 6 -p "Choose: ") ;;
@@ -13,7 +16,8 @@ if [ $res = "lock" ]; then
 	i3lock-fancy && sleep 1
 fi
 if [ $res = "suspend" ]; then
-	i3lock-fancy && sleep 1 && sudo zzz #systemctl suspend
+	i3lock-fancy && sleep 1
+    [ ! $sysd -eq 0 ] && sudo zzz || systemctl suspend
 fi
 if [ $res = "logout" ]; then
     case "$DESKTOP_SESSION" in
@@ -30,13 +34,12 @@ if [ $res = "logout" ]; then
     esac
 fi
 if [ $res = "hibernate" ]; then
-	i3lock-fancy && sleep 1 && sudo ZZZ #systemctl hibernate
+	i3lock-fancy && sleep 1
+    [ ! $sysd -eq 0 ] && sudo ZZZ || systemctl hibernate
 fi
 if [ $res = "reboot" ]; then
-	#systemctl reboot
-    sudo reboot
+    [ ! $sysd -eq 0 ] && sudo reboot || systemctl reboot
 fi
 if [ $res = "shutdown" ]; then
-	#systemctl poweroff -i
-    sudo shutdown -P now
+    [ ! $sysd -eq 0 ] && sudo shutdown -P now || systemctl poweroff -i
 fi
