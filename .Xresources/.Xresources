@@ -42,4 +42,5 @@ st.termname: st-256color
 !! dwm settings
 dwm.gappx: 2
 dwm.mfact: 0.5
+dwm.resizehints: 0
 
