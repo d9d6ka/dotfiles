@@ -1,14 +1,14 @@
 #!/usr/bin/env sh
 
 run () {
-    pgrep -f $(basename -- $1)
+    pidof $(basename -- $1)
     if [ $? -eq 1 ]; then
         "$@" &
     fi
 }
 
 hlt () {
-    for i in $(pgrep -f $(basename -- $1)); do
+    for i in $(pidof $(basename -- $1)); do
         kill $i
     done
 }
@@ -49,5 +49,11 @@ run nitrogen --random --set-zoom-fill ~/.local/share/wallpapers
 run pcmanfm -d
 
 # Statusbar
-[ "$DESKTOP_SESSION" = "dwm" ] && run dwmblocks
-
+if [ "$DESKTOP_SESSION" = "dwm" ]; then
+    run dwmblocks
+fi
+if [ "$DESKTOP_SESSION" = "xmonad" ]; then
+    [ -e "/tmp/i3status.pipe" ] || mkfifo /tmp/i3status.pipe
+    hlt i3status
+    run i3status > /tmp/i3status.pipe
+fi

@@ -31,6 +31,7 @@ if [ $res = "logout" ]; then
         "openbox") openbox --exit ;;
         "qtile") xdotool key Super+Shift+q ;;
         "sowm") pkill sowm ;;
+        "xmonad") xdotool key Super+Shift+q ;;
     esac
 fi
 if [ $res = "hibernate" ]; then
