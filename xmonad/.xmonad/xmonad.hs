@@ -152,6 +152,7 @@ myManageHook = composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
     , className =? "Firefox"        --> doShift ( myClickableWorkspaces !! 8 )
+    , className =? "Chromium"       --> doShift ( myClickableWorkspaces !! 8 )
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore ] <+> manageDocks
 
