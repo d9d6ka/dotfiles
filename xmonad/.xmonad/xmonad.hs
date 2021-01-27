@@ -65,7 +65,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0,    xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
     , ((0,    xF86XK_AudioMute),        spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
     -- clipmenu
-    , ((modm,               xK_c     ), spawn "clipmenu")
+    , ((modm,               xK_c     ), spawn "clipmenu -p \"Clip:\"")
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
      -- Rotate through the available layout algorithms

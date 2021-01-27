@@ -2,18 +2,19 @@
 -- install xmobar with these flags: --flags="with_alsa" --flags="with_mpd" --flags="with_xft"  OR --flags="all_extensions"
 -- you can find weather location codes here: http://weather.noaa.gov/index.html
 
-Config { font    = "xft:Fira Code:weight=bold:pixelsize=11:antialias=true:hinting=true"
-       , additionalFonts = [ "xft:FiraCode Nerd Font:pixelsize=11:antialias=true:hinting=true" ]
+Config { font    = "xft:Fira Code:weight=bold:pixelsize=12:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:FiraCode Nerd Font:pixelsize=12:antialias=true:hinting=true" ]
        , bgColor = "#282c34"
        , fgColor = "#666666"
-       , position = Static { xpos = 0 , ypos = 0, width = 1024, height = 16 }
+       , position = Static { xpos = 0 , ypos = 0, width = 1024, height = 18 }
        , lowerOnStart = True
        , hideOnStart = False
        , allDesktops = True
        , persistent = True
        , iconRoot = "/home/zyamalov/.xmonad/xpm/"  -- default: "."
        , commands = [
-                      Run Com "/home/zyamalov/.local/bin/dwmblocks/newpackages" [] "pacupdate" 36000
+                      Run Com "newpackages" [] "pacupdate" 9000
+                    , Run Com "trayer-icon-xpm" [] "trayer" 10
                       -- Prints out the left side items such as workspaces, layout, etc.
                       -- The workspaces are 'clickable' in my configs.
                     , Run PipeReader "/tmp/i3status.pipe" "status"
@@ -21,5 +22,5 @@ Config { font    = "xft:Fira Code:weight=bold:pixelsize=11:antialias=true:hintin
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "<action=`rofi -show drun -show-icons`><icon=lambda_16.xpm/></action><fc=#666666>|</fc> %UnsafeStdinReader% }{ <fc=#666666> |</fc> <fc=#b3afc2><fn=1>%pacupdate%</fn></fc><fc=#666666> |</fc> <fc=#b3afc2><fn=1>%status%</fn></fc>"
+       , template = "<action=`rofi -show drun -show-icons`><icon=lambda_16.xpm/></action><fc=#666666>|</fc>%UnsafeStdinReader%}{<fc=#666666> |</fc> <fc=#b3afc2><fn=1>%pacupdate%</fn></fc><fc=#666666> |</fc> <fc=#b3afc2><fn=1>%status%</fn></fc> %trayer%"
        }

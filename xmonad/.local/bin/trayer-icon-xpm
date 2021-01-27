@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+create_xpm_icon () {
+    timestamp=$(date)
+    pixels=$(for i in $(seq $1); do echo -n "."; done)
+
+    cat << EOF > "$2"
+/* XPM *
+static char * trayer_pad_xpm[] = {
+"$1 1 1 1",
+". c none",
+"$pixels"
+};
+EOF
+}
+
+width=$(xprop -name panel | grep 'program specified minimum size' | cut -d ' ' -f 5)
+iconfile="/tmp/trayer-padding-${width}px.xpm"
+
+if [ ! -f $iconfile ]; then
+    create_xpm_icon $width $iconfile
+fi
+
+echo "<icon=${iconfile}/>"
+

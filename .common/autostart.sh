@@ -53,7 +53,9 @@ if [ "$DESKTOP_SESSION" = "dwm" ]; then
     run dwmblocks
 fi
 if [ "$DESKTOP_SESSION" = "xmonad" ]; then
+    hlt trayer
+    run trayer --edge top --align right --widthtype request --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint 0x282c34  --height 16
     [ -e "/tmp/i3status.pipe" ] || mkfifo /tmp/i3status.pipe
     hlt i3status
-    run i3status > /tmp/i3status.pipe
+    i3status > /tmp/i3status.pipe &
 fi
