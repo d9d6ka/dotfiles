@@ -6,7 +6,7 @@ Config { font    = "xft:Fira Code:weight=bold:pixelsize=12:antialias=true:hintin
        , additionalFonts = [ "xft:FiraCode Nerd Font:pixelsize=12:antialias=true:hinting=true" ]
        , bgColor = "#282c34"
        , fgColor = "#666666"
-       , position = Static { xpos = 0 , ypos = 0, width = 1024, height = 18 }
+       , position = TopW C 100
        , lowerOnStart = True
        , hideOnStart = False
        , allDesktops = True
@@ -14,7 +14,7 @@ Config { font    = "xft:Fira Code:weight=bold:pixelsize=12:antialias=true:hintin
        , iconRoot = "/home/zyamalov/.xmonad/xpm/"  -- default: "."
        , commands = [
                       Run Com "newpackages" [] "pacupdate" 9000
-                    , Run Com "trayer-icon-xpm" [] "trayer" 10
+                    , Run Com "/home/zyamalov/.xmonad/trayer-icon-xpm" [] "trayer" 10
                       -- Prints out the left side items such as workspaces, layout, etc.
                       -- The workspaces are 'clickable' in my configs.
                     , Run PipeReader "/tmp/i3status.pipe" "status"

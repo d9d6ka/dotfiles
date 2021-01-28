@@ -6,6 +6,9 @@ import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
 import XMonad.Layout.Spacing
+import XMonad.Layout.LayoutModifier
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Spacing
 
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Hooks.EwmhDesktops
@@ -137,6 +140,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
+mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing i = spacingRaw True (Border i i i i) True (Border i i i i) True
+
 myLayout = tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -148,13 +154,13 @@ myLayout = tiled ||| Mirror tiled ||| Full
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
 
-myManageHook = composeAll
+myManageHook = manageDocks <+> composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
     , className =? "Firefox"        --> doShift ( myClickableWorkspaces !! 8 )
     , className =? "Chromium"       --> doShift ( myClickableWorkspaces !! 8 )
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ] <+> manageDocks
+    , resource  =? "kdesktop"       --> doIgnore ]
 
 myEventHook = mempty <+> docksEventHook
 
@@ -177,7 +183,7 @@ main = do
         keys               = myKeys,
         mouseBindings      = myMouseBindings,
       -- hooks, layouts
-        layoutHook         = spacingRaw True (Border myGapWidth myGapWidth myGapWidth myGapWidth) True (Border myGapWidth myGapWidth myGapWidth myGapWidth) True $ avoidStruts $ myLayout,
+        layoutHook         = smartBorders $ mySpacing myGapWidth $ avoidStruts $ myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = workspaceHistoryHook <+> dynamicLogWithPP xmobarPP

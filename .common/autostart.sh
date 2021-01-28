@@ -1,14 +1,14 @@
 #!/usr/bin/env sh
 
 run () {
-    pidof $(basename -- $1)
+    pgrep -f $(basename -- $1)
     if [ $? -eq 1 ]; then
         "$@" &
     fi
 }
 
 hlt () {
-    for i in $(pidof $(basename -- $1)); do
+    for i in $(pgrep -f $(basename -- $1)); do
         kill $i
     done
 }
@@ -19,6 +19,18 @@ run xrdb -merge ~/.config/Xresources/Nord
 
 # Mate Polkit Agent
 run /usr/libexec/polkit-mate-authentication-agent-1
+
+# Statusbar
+if [ "$DESKTOP_SESSION" = "dwm" ]; then
+    run dwmblocks
+fi
+if [ "$DESKTOP_SESSION" = "xmonad" ]; then
+    hlt trayer
+    run trayer --edge top --align right --widthtype request --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint 0x282c34  --height 16
+    [ -e "/tmp/i3status.pipe" ] || mkfifo /tmp/i3status.pipe
+    hlt i3status
+    i3status > /tmp/i3status.pipe &
+fi
 
 # Notifications
 run dunst
@@ -48,14 +60,3 @@ run nitrogen --random --set-zoom-fill ~/.local/share/wallpapers
 # Daemonise PCManFM
 run pcmanfm -d
 
-# Statusbar
-if [ "$DESKTOP_SESSION" = "dwm" ]; then
-    run dwmblocks
-fi
-if [ "$DESKTOP_SESSION" = "xmonad" ]; then
-    hlt trayer
-    run trayer --edge top --align right --widthtype request --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint 0x282c34  --height 16
-    [ -e "/tmp/i3status.pipe" ] || mkfifo /tmp/i3status.pipe
-    hlt i3status
-    i3status > /tmp/i3status.pipe &
-fi
