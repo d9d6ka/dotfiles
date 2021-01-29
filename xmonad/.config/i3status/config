@@ -21,10 +21,10 @@ order += "tztime local"
 battery 0 {
         format = "%status %percentage (%emptytime)"
         format_down = "N/A"
-        status_chr = ":"
-        status_bat = ":"
-        status_unk = ":"
-        status_full = ":"
+        status_chr = ""
+        status_bat = ""
+        status_unk = ""
+        status_full = ""
 }
 
 tztime local {
@@ -33,7 +33,7 @@ tztime local {
 
 volume master {
         device = "pulse"
-        format = "墳: %volume"
-        format_muted = "婢: mute"
+        format = "墳 %volume"
+        format_muted = "婢 mute"
 }
 
