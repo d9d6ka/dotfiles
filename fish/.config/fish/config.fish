@@ -13,3 +13,6 @@ abbr -a -U lf lfcd
 # start SSH Agent
 start_ssh_agent
 
+# starship prompt
+starship init fish | source
+
