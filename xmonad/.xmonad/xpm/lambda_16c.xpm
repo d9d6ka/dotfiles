@@ -3,9 +3,9 @@ static char *haskell_2[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 4 1 ",
 "  c None",
-". c #666666",
-"+ c #b3afc2",
-"@ c #b3afc2",
+". c #443961",
+"+ c #5E5087",
+"@ c #8F4E8B",
 /* pixels */
 "                ",
 "...+++          ",
